@@ -1,0 +1,93 @@
+import { VerticalBox, HorizontalBox, Button, GridBox, CheckBox } from "std-widgets.slint";
+import { Setting } from "./setting.slint";
+ 
+
+export component MainWindow inherits Window {
+
+    property <color> primary_color:#1C1B1F;
+    property <length> posion;
+    property <length> height_windows: 210px;
+    in-out property <image> act_record: @image-url("icons/highlight_mouse_cursor_24dp_1C1B1F_FILL0_wght400_GRAD0_opsz24.png");
+    callback move_windows();
+
+    width: 400px;
+    height: height_windows;
+    no-frame: true;
+    background: transparent;
+
+    VerticalLayout {
+        alignment: LayoutAlignment.start;
+        Rectangle {
+            padding-bottom: 20px;
+            width: 400px;
+            height: 50px;
+            background: #D9D9D9;
+
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+            Image {
+                y: 14px;
+                x: 10px;
+                height: 24px;
+                width: 24px;
+                source: @image-url("icons/drag_handle_24dp_1C1B1F_FILL0_wght400_GRAD0_opsz24.png");
+                TouchArea {
+                    moved => {
+                        move_windows();
+                    }
+                }
+            }
+
+            Image {
+                y: 14px;
+                x: parent.width - 32px;
+                height: 24px;
+                width: 24px;
+                source: @image-url("icons/close_24dp_1C1B1F_FILL0_wght400_GRAD0_opsz24.png");
+            }
+
+            Image {
+                y: 14px;
+                x: 50px;
+                height: 24px;
+                width: 24px;
+                source: act_record;
+                TouchArea {
+                    clicked => {
+                        act_record = @image-url("icons/highlight_mouse_cursor_24dp_F60004_FILL0_wght400_GRAD0_opsz24.png");
+                    }
+                }
+            }
+
+            Image {
+                y: 14px;
+                x: 90px;
+                height: 24px;
+                width: 24px;
+                source: @image-url("icons/contract_24dp_1C1B1F_FILL0_wght400_GRAD0_opsz24.png");
+            }
+
+            Image {
+                y: 14px;
+                x: 130px;
+                height: 24px;
+                width: 24px;
+                source: @image-url("icons/settings_24dp_1C1B1F_FILL0_wght400_GRAD0_opsz24.png");
+            }
+
+            Text {
+                y: 12px;
+                x: 200px;
+                text: "00:00:00";
+                font-size: 24px;
+                color: primary_color;
+            }
+        }
+        Setting {
+            
+        }
+     
+    }
+}
