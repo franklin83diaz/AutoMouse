@@ -1,5 +1,6 @@
 import { VerticalBox, HorizontalBox, Button, GridBox, CheckBox } from "std-widgets.slint";
 import { Setting } from "./setting.slint";
+import { ListMacros } from "./list-macros.slint";
  
 
 export component MainWindow inherits Window {
@@ -12,7 +13,7 @@ export component MainWindow inherits Window {
 
     width: 400px;
     height: height_windows;
-    no-frame: true;
+    no-frame: false;
     background: transparent;
 
     VerticalLayout {
@@ -85,9 +86,8 @@ export component MainWindow inherits Window {
                 color: primary_color;
             }
         }
-        Setting {
-            
-        }
+  //      Setting {}
+  ListMacros{}
      
     }
 }
