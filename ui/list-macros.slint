@@ -2,6 +2,7 @@ import { ListView } from "std-widgets.slint";
 
 
 export component ListMacros inherits Rectangle {
+ 
 
     width: 400px;
     height: 160px;
@@ -13,33 +14,38 @@ export component ListMacros inherits Rectangle {
         x:0px;
         width: 400px;
         height: 160px;
+
         for data in [
-            { text: "Jan 31, 2025 (00) | 09:50:25 | R:003 | L: 000", color: #1d1d1d, bg: #eeeeee},
-            { text: "Jan 31, 2025 (01) | 00:00:53 | R:003 | L: 000", color: #1d1d1d, bg: #d1dcdf},
-            { text: "Jan 31, 2025 (02) | 00:50:25 | R:003 | L: 000", color: #1d1d1d, bg: #eeeeee},
-            
+            { id: 1, text: "Jan 31, 2025 (00) | 09:50:25 | R:003 | L: 000", color: #1d1d1d, bg: #eeeeee},
+            { id: 2, text: "Jan 31, 2025 (01) | 00:00:53 | R:003 | L: 000", color: #1d1d1d, bg: #d1dcdf},
+            { id: 3, text: "Jan 31, 2025 (02) | 00:50:25 | R:003 | L: 000", color: #1d1d1d, bg: #eeeeee},
         ] : 
        
         Rectangle {
             height: 30px;
-            background:  data.bg;
+            background:  touch.has-hover || touchRun.has-hover || touchDel.has-hover ? #bdd9f5 : data.bg;
             width: parent.width;
+            touch := TouchArea {}
+
             Text {
                 padding: 30px;
                 x: 15px;
                 text: data.text;
                 color: data.color;
             }
-             
-            Image {
+
+            Image {    
                 y: 4px;
                 x: 340px;
                 height: 24px;
                 width: 24px;
                 source: @image-url("icons/motion_play_24dp_1C1B1F_FILL0_wght400_GRAD0_opsz24.png");
-                TouchArea {
-                  
+                touchRun := TouchArea { 
+                    clicked => {
+                        debug("clicked run!!");
+                    }
                 }
+                
             }
             Image {
                 y: 4px;
@@ -47,8 +53,10 @@ export component ListMacros inherits Rectangle {
                 height: 24px;
                 width: 24px;
                 source: @image-url("icons/delete_24dp_1C1B1F_FILL0_wght400_GRAD0_opsz24.png");
-                TouchArea {
-                  
+                touchDel := TouchArea { 
+                    clicked => {
+                        debug("clicked del!!");
+                    }
                 }
             }
         }

@@ -7,12 +7,14 @@ export component MainWindow inherits Window {
 
     property <color> primary_color:#1C1B1F;
     property <length> posion;
-    property <length> height_windows: 210px;
     in-out property <image> act_record: @image-url("icons/highlight_mouse_cursor_24dp_1C1B1F_FILL0_wght400_GRAD0_opsz24.png");
+    in-out property <bool> subWindowsOpened: false;
+    in-out property <bool> showSetting: false;
+    in-out property <bool> showListMacros: false;
     callback move_windows();
 
     width: 400px;
-    height: height_windows;
+    height: subWindowsOpened ? 210px : 50px;
     no-frame: false;
     background: transparent;
 
@@ -23,11 +25,10 @@ export component MainWindow inherits Window {
             width: 400px;
             height: 50px;
             background: #D9D9D9;
-
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
-            border-bottom-left-radius: 0px;
-            border-bottom-right-radius: 0px;
+            border-bottom-left-radius: subWindowsOpened ? 0px : 5px;
+            border-bottom-right-radius: subWindowsOpened ? 0px: 5px;
             Image {
                 y: 14px;
                 x: 10px;
@@ -68,6 +69,20 @@ export component MainWindow inherits Window {
                 height: 24px;
                 width: 24px;
                 source: @image-url("icons/contract_24dp_1C1B1F_FILL0_wght400_GRAD0_opsz24.png");
+                TouchArea {
+                    clicked => {
+                        if showListMacros {
+                            subWindowsOpened = false;
+                            showListMacros = false;
+                            
+                        }else{
+                            subWindowsOpened = true;
+                            showSetting = false;
+                            showListMacros = true;
+                        }
+                        
+                    }
+                }
             }
 
             Image {
@@ -76,6 +91,19 @@ export component MainWindow inherits Window {
                 height: 24px;
                 width: 24px;
                 source: @image-url("icons/settings_24dp_1C1B1F_FILL0_wght400_GRAD0_opsz24.png");
+                TouchArea {
+                    clicked => {
+                        if showSetting {
+                            showSetting = false;
+                            subWindowsOpened = false;
+                        }else{
+                            subWindowsOpened = true;
+                            showListMacros = false;
+                            showSetting = true;
+                        }
+                        
+                    }
+                }
             }
 
             Text {
@@ -86,8 +114,8 @@ export component MainWindow inherits Window {
                 color: primary_color;
             }
         }
-  //      Setting {}
-  ListMacros{}
+        if showSetting: Setting {}
+        if showListMacros:  ListMacros{}
      
     }
 }

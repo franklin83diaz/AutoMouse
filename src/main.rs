@@ -1,6 +1,6 @@
 slint::include_modules!();
 use device_query::{DeviceQuery, DeviceState};
-use slint::{ComponentHandle, LogicalPosition, Window};
+use slint::{ComponentHandle, LogicalPosition};
 
 
 fn main() -> Result<(), slint::PlatformError> {
@@ -22,8 +22,5 @@ fn main() -> Result<(), slint::PlatformError> {
         }
     });
 
-
-
-    //  main_window.window().set_position(LogicalPosition::new(0.0, 0.0));
     main_window.run()
 }
