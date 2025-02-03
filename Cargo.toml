@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 slint = "=1.8.0"
-rdev = "0.5"
+rdev = "0.5.3"
 device_query = "1.1"
 
 [build-dependencies]

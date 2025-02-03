@@ -1,10 +1,11 @@
-import { VerticalBox, HorizontalBox, Button, GridBox, CheckBox, TextEdit, SpinBox, Palette, LineEdit } from "std-widgets.slint";
+import { VerticalBox, HorizontalBox, Button, GridBox, CheckBox, TextEdit, SpinBox, Palette, LineEdit  } from "std-widgets.slint";
 
 
 export component Setting inherits Rectangle {
     property <color> primary_color: #1C1B1F;
     property <string> each: "1";
     property <bool> PressKey: false;
+    in-out property <string> keyStop: "q";
     property <image> check: @image-url("icons/check_box_outline_blank_18dp_1C1B1F_FILL0_wght400_GRAD0_opsz20.png");
 
     width: 400px;
@@ -21,7 +22,7 @@ export component Setting inherits Rectangle {
                 color: primary_color;
                 font-size: 16px;
             }
-            
+
             CheckBox {
                 width: 25px;
                 height: 20px;
@@ -45,11 +46,10 @@ export component Setting inherits Rectangle {
                 font-size: 16px;
                 input-type: number;
                 edited(text) => {
-                    
                 }
-               
             }
         }
+
         HorizontalLayout {
             alignment: LayoutAlignment.start;
             padding-left: 20px;
@@ -59,46 +59,61 @@ export component Setting inherits Rectangle {
                 color: primary_color;
                 font-size: 16px;
             }
+
             Rectangle {
+                forward-focus: my-key-handler;
+                my-key-handler := FocusScope {
+                   
+                    key-released(event) => {
+                        debug(event);
+                        if (event.modifiers.control) {
+                            PressKey=false;
+                            
+                            keyStop =event.text;
+                        }
+                        accept
+
+                    }
+                }
                 width: 45px;
                 height: 29px;
                 Image {
-                    y:0px;
+                    y: 0px;
                     x: 0px;
                     height: 29px;
                     width: 45px;
                     source: @image-url("icons/keymod.png");
-                    TouchArea {
-                        clicked => {
-                           PressKey = true;
-                        }
+
+                    Text {
+                        text: "ctrl";
+                        color: #888888;
                     }
                 }
-                Text {
-                    text: "ctrl";
-                    color: #888888;
-                }
             }
+        
+
             Rectangle {
                 width: 28px;
                 height: 28px;
                 Image {
-                    y:0px;
+                    y: 0px;
                     x: 0px;
                     height: 28px;
                     width: 28px;
                     source: @image-url("icons/key.png");
                     TouchArea {
                         clicked => {
-                           PressKey = true;
+                            PressKey = true;
                         }
                     }
                 }
+
                 Text {
-                    text: "Q";
+                    text: keyStop;
                     color: #888888;
                 }
             }
+
             Text {
                 visible: PressKey;
                 text: "  Press the Control + Key...";
@@ -106,6 +121,7 @@ export component Setting inherits Rectangle {
                 font-size: 14px;
             }
         }
+
         HorizontalLayout {
             alignment: LayoutAlignment.start;
             padding-left: 20px;
@@ -115,16 +131,19 @@ export component Setting inherits Rectangle {
                 color: primary_color;
                 font-size: 16px;
             }
+
             CheckBox {
                 width: 25px;
                 height: 20px;
                 padding: 0px;
             }
+
             Text {
                 text: "  After:";
                 color: primary_color;
                 font-size: 16px;
             }
+
             LineEdit {
                 width: 50px;
                 height: 20px;
@@ -132,17 +151,14 @@ export component Setting inherits Rectangle {
                 font-size: 16px;
                 input-type: number;
                 edited(text) => {
-                    
                 }
-               
             }
-            
+
             Text {
                 text: "Clicks";
                 color: primary_color;
                 font-size: 16px;
             }
-            
         }
     }
 }
