@@ -61,60 +61,59 @@ export component Setting inherits Rectangle {
             }
 
             Rectangle {
+                width: 72px;
+                height: 29px;
                 forward-focus: my-key-handler;
                 my-key-handler := FocusScope {
-                   
                     key-released(event) => {
                         debug(event);
                         if (event.modifiers.control) {
-                            PressKey=false;
-                            
-                            keyStop =event.text;
+                            PressKey = false;
+                            keyStop = event.text;
                         }
                         accept
-
                     }
                     focus-changed-event => {
-                        debug("change");
+                        PressKey = self.has-focus;
                     }
                 }
-                
-                width: 45px;
-                height: 29px;
-                Image {
+                Rectangle {
                     y: 0px;
                     x: 0px;
-                    height: 29px;
                     width: 45px;
-                    source: @image-url("icons/keymod.png");
+                    height: 29px;
+                    Image {
+                        y: 0px;
+                        x: 0px;
+                        height: 29px;
+                        width: 45px;
+                        source: @image-url("icons/keymod.png");
 
-                    Text {
-                        text: "ctrl";
-                        color: #888888;
-                    }
-                }
-            }
-        
-
-            Rectangle {
-                width: 28px;
-                height: 28px;
-                Image {
-                    y: 0px;
-                    x: 0px;
-                    height: 28px;
-                    width: 28px;
-                    source: @image-url("icons/key.png");
-                    TouchArea {
-                        clicked => {
-                            PressKey = true;
+                        Text {
+                            text: "ctrl";
+                            color: #888888;
                         }
                     }
                 }
 
-                Text {
-                    text: keyStop;
-                    color: #888888;
+                Rectangle {
+                    y: 0px;
+                    x: 45px;
+                    width: 28px;
+                    height: 28px;
+                    Image {
+                        y: 0px;
+                        x: 0px;
+                        height: 28px;
+                        width: 28px;
+                        source: @image-url("icons/key.png");
+                      
+                    }
+
+                    Text {
+                        text: keyStop;
+                        color: #888888;
+                    }
                 }
             }
 
