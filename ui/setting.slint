@@ -74,7 +74,11 @@ export component Setting inherits Rectangle {
                         accept
 
                     }
+                    focus-changed-event => {
+                        debug("change");
+                    }
                 }
+                
                 width: 45px;
                 height: 29px;
                 Image {
