@@ -3,6 +3,7 @@ use device_query::{DeviceQuery, DeviceState};
 use slint::{ComponentHandle, LogicalPosition};
 use rdev::{listen, Event, EventType};
 use std::time::{SystemTime, UNIX_EPOCH};
+use std::thread;
 
 
 fn main() -> Result<(), slint::PlatformError> {
@@ -24,9 +25,12 @@ fn main() -> Result<(), slint::PlatformError> {
         }
     });
 
-    // if let Err(error) = listen(callback) {
-    //     eprintln!("Error: {:?}", error);
-    // }
+    thread::spawn(|| {
+            if let Err(error) = listen(callback) {
+                eprintln!("Error: {:?}", error);
+            }
+    });
+
 
     main_window.run()
 }
