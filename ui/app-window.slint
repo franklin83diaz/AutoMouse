@@ -12,6 +12,7 @@ export component MainWindow inherits Window {
     in-out property <bool> showSetting: false;
     in-out property <bool> showListMacros: false;
     callback move_windows();
+    callback record();
 
     width: 400px;
     height: subWindowsOpened ? 210px : 50px;
@@ -59,6 +60,7 @@ export component MainWindow inherits Window {
                 TouchArea {
                     clicked => {
                         act_record = @image-url("icons/highlight_mouse_cursor_24dp_F60004_FILL0_wght400_GRAD0_opsz24.png");
+                        record();
                     }
                 }
             }

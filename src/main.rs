@@ -3,10 +3,13 @@ use device_query::{DeviceQuery, DeviceState};
 use slint::{ComponentHandle, LogicalPosition};
 use rdev::{listen, Event, EventType};
 use std::time::{SystemTime, UNIX_EPOCH};
-use std::thread;
+use std::{thread};
+use crossbeam::channel;
 
 
 fn main() -> Result<(), slint::PlatformError> {
+    let (tx, rx) = channel::bounded::<i32>(1);
+
     let main_window = MainWindow::new()?;
   
     // main_window.show();
@@ -23,12 +26,20 @@ fn main() -> Result<(), slint::PlatformError> {
                 .window()
                 .set_position(LogicalPosition::new(x as f32, y as f32));
         }
+
+    });
+
+    main_window.on_record(move || {
+        let _ =  tx.send(1);
     });
 
     thread::spawn(|| {
+        for _ in rx  {
             if let Err(error) = listen(callback) {
                 eprintln!("Error: {:?}", error);
             }
+        }
+            
     });
 
 
