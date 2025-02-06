@@ -66,7 +66,6 @@ fn main() -> Result<(), slint::PlatformError> {
         }
 
         let each_return = SharedString::from(n.unwrap().to_string());
-
         main_window_set_repeat_each.set_repeat_each(each_return);
     });
 

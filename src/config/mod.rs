@@ -1,2 +1,2 @@
 pub mod strucs;
-pub mod setconfig;
+//pub mod setconfig;
