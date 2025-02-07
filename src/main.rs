@@ -9,6 +9,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 mod config;
 use config::strucs::Setting;
+use config::set::repeat_each;
 
 fn main() -> Result<(), slint::PlatformError> {
     let (tx, rx) = channel::bounded::<i32>(1);
@@ -48,25 +49,7 @@ fn main() -> Result<(), slint::PlatformError> {
     let conf_set_repeat_each = conf.clone();
     let main_window_set_repeat_each = main_window.clone_strong();
     main_window.on_set_repeat_each(move |v| {
-        if v.is_empty() {
-            if let Ok(mut conf) = conf_set_repeat_each.lock() {
-                conf.set_repeat_each(1);
-            }
-            return;
-        }
-
-        let mut n = parse_int(v.as_str());
-
-        if n.unwrap() > 10 {
-            n = Some(10);
-        }
-
-        if let Ok(mut conf) = conf_set_repeat_each.lock() {
-            conf.set_repeat_each(n.unwrap());
-        }
-
-        let each_return = SharedString::from(n.unwrap().to_string());
-        main_window_set_repeat_each.set_repeat_each(each_return);
+        repeat_each(v, &main_window_set_repeat_each, &conf_set_repeat_each)
     });
 
     thread::spawn(|| {
@@ -106,6 +89,3 @@ fn callback(event: Event) {
     }
 }
 
-fn parse_int(input: &str) -> Option<i32> {
-    input.trim().parse::<i32>().ok()
-}
