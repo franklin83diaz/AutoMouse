@@ -6,6 +6,7 @@ import { ListMacros } from "./list-macros.slint";
 export component MainWindow inherits Window {
 
     property <color> primary_color:#1C1B1F;
+    property <bool> recording: false;
     property <image> act_record: @image-url("icons/highlight_mouse_cursor_24dp_1C1B1F_FILL0_wght400_GRAD0_opsz24.png");
     property <bool> subWindowsOpened: false;
     property <bool> showSetting: false;
@@ -64,11 +65,13 @@ export component MainWindow inherits Window {
                 x: 50px;
                 height: 24px;
                 width: 24px;
-                source: act_record;
+                source: recording ? @image-url("icons/highlight_mouse_cursor_24dp_F60004_FILL0_wght400_GRAD0_opsz24.png") : @image-url("icons/highlight_mouse_cursor_24dp_1C1B1F_FILL0_wght400_GRAD0_opsz24.png");
                 TouchArea {
                     clicked => {
-                        act_record = @image-url("icons/highlight_mouse_cursor_24dp_F60004_FILL0_wght400_GRAD0_opsz24.png");
-                        record();
+                        if (!recording) {
+                            record();
+                            recording = true;
+                        }
                     }
                 }
             }
