@@ -1,13 +1,13 @@
 
 use slint::SharedString;
-use std::sync::{Arc, Mutex};
-use super::strucs::Setting;
 
-pub fn repeat_each(v: SharedString, main_window:&crate::slint_generatedMainWindow::MainWindow,  conf_set_repeat_each: &Arc<Mutex<Setting>>){
+use super::strucs::{Setting, CONFIG_INSTANCE};
+
+pub fn repeat_each(v: SharedString, main_window:&crate::slint_generatedMainWindow::MainWindow  ){
+    let  conf = CONFIG_INSTANCE.get_or_init(Setting::default);
+    
     if v.is_empty() {
-        if let Ok(mut conf) = conf_set_repeat_each.lock() {
             conf.set_repeat_each(1);
-        }
         return;
     }
 
@@ -17,10 +17,8 @@ pub fn repeat_each(v: SharedString, main_window:&crate::slint_generatedMainWindo
         n = Some(10);
     }
 
-    if let Ok(mut conf) = conf_set_repeat_each.lock() {
-        conf.set_repeat_each(n.unwrap());
-    }
-
+    conf.set_repeat_each(n.unwrap());
+    
     let each_return = SharedString::from(n.unwrap().to_string());
     main_window.set_repeat_each(each_return);
 }

@@ -1,21 +1,54 @@
 slint::include_modules!();
 use crossbeam::channel;
 use device_query::{DeviceQuery, DeviceState};
-use rdev::{listen, Event, EventType};
-use slint::{ComponentHandle, LogicalPosition, SharedString};
-use std::sync::{Arc, Mutex};
-use std::thread;
-use std::time::{SystemTime, UNIX_EPOCH};
+use rdev::{listen, Event};
+use slint::{invoke_from_event_loop, ComponentHandle, LogicalPosition, SharedString};
+use std::thread::{self, sleep};
 
+use std::time::Duration;
 mod config;
-use config::strucs::Setting;
 use config::set::repeat_each;
+use config::strucs::{Communication, Setting, CONFIG_INSTANCE, CON_INSTANCE};
+
+mod mouse;
+use mouse::process;
 
 fn main() -> Result<(), slint::PlatformError> {
-    let (tx, rx) = channel::bounded::<i32>(1);
+    //  let (tx, rx) = channel::bounded::<i32>(1);
+    let con = CON_INSTANCE.get_or_init(Communication::new);
 
     let main_window = MainWindow::new()?;
-    let conf = Arc::new(Mutex::new(Setting::default()));
+
+    let handle_weak = main_window.as_weak();
+
+    thread::spawn(move || loop {
+        let mut t = 0;
+        loop {
+            let config = CONFIG_INSTANCE.get().unwrap();
+            if !config.get_recoding() {
+                break;
+            }
+
+            let handle_copy = handle_weak.clone();
+
+            let t_string = format!("{:02}:{:02}:{:02}", t / 3600, (t % 3600) / 60, t % 60);
+            let _ = invoke_from_event_loop(move || {
+                handle_copy.unwrap().set_time(SharedString::from(t_string))
+            });
+            sleep(Duration::from_millis(1000));
+            t += 1;
+        }
+    });
+
+    let handle_weak2 = main_window.as_weak();
+    thread::spawn(move || loop {
+        let data = con.rx.recv().unwrap();
+        println!("Received: {}", data);
+        let handle_copy2 = handle_weak2.clone();
+        let _ = invoke_from_event_loop(move || handle_copy2.unwrap().set_recording(false));
+    });
+
+    let conf = CONFIG_INSTANCE.get_or_init(Setting::default);
 
     // main_window.show();
     let app_handle = main_window.as_weak();
@@ -34,29 +67,22 @@ fn main() -> Result<(), slint::PlatformError> {
         }
     });
 
-    let conf_set_repeat = conf.clone();
     main_window.on_set_repeat(move |v| {
-        if let Ok(mut conf) = conf_set_repeat.lock() {
-            conf.set_repeat(v);
-        }
+        conf.set_repeat(v);
     });
 
     main_window.on_record(move || {
-        let _ = tx.send(1);
+        conf.set_recoding(true);
     });
 
-   
-    let conf_set_repeat_each = conf.clone();
     let main_window_set_repeat_each = main_window.clone_strong();
     main_window.on_set_repeat_each(move |v| {
-        repeat_each(v, &main_window_set_repeat_each, &conf_set_repeat_each)
+        repeat_each(v, &main_window_set_repeat_each);
     });
 
     thread::spawn(|| {
-        for _ in rx {
-            if let Err(error) = listen(callback) {
-                eprintln!("Error: {:?}", error);
-            }
+        if let Err(error) = listen(callback) {
+            eprintln!("Error: {:?}", error);
         }
     });
 
@@ -64,28 +90,5 @@ fn main() -> Result<(), slint::PlatformError> {
 }
 
 fn callback(event: Event) {
-    println!("{:?}", event);
-
-    let start = SystemTime::now();
-    let millis = start
-        .duration_since(UNIX_EPOCH)
-        .expect("El tiempo debe ser posterior a UNIX_EPOCH")
-        .as_millis();
-
-    match event.event_type {
-        EventType::KeyPress(rdev::Key::ControlLeft) => {
-            println!("Left Control");
-        }
-        EventType::MouseMove { x, y } => {
-            println!("Mouse moved to: x = {},y = {} , time = {}", x, y, millis);
-        }
-        EventType::ButtonPress(button) => {
-            println!("Mouse button pressed: {:?}", button);
-        }
-        EventType::ButtonRelease(button) => {
-            println!("Mouse button released: {:?}", button);
-        }
-        _ => {}
-    }
+    process::processEvent(event);
 }
-
