@@ -67,6 +67,16 @@ impl Setting {
         *data = repeat;
     }
 
+    pub fn get_repeat(&self) -> bool {
+        let data = self.repeat.lock().unwrap();
+        *data
+    }
+
+    pub fn get_repeat_each(&self) -> i32 {
+        let data = self.repeat_each.lock().unwrap();
+        *data
+    }
+
     pub fn set_repeat_each(&self, repeat_each: i32) {
         if cfg!(debug_assertions) {
             println!("set_repeat_each: {}", repeat_each);
@@ -74,6 +84,11 @@ impl Setting {
 
         let mut data = self.repeat_each.lock().unwrap();
         *data = repeat_each;
+    }
+
+    pub fn get_key_stop(&self) -> char {
+        let data = self.key_stop.lock().unwrap();
+        *data
     }
 
     pub fn set_key_stop(&self, key_stop: char) {
@@ -84,12 +99,22 @@ impl Setting {
         *data = key_stop;
     }
 
+    pub fn get_auto_stop(&self) -> bool {
+        let data = self.auto_stop.lock().unwrap();
+        *data
+    }
+
     pub fn set_auto_stop(&self, auto_stop: bool) {
         if cfg!(debug_assertions) {
             println!("set_auto_stop: {}", auto_stop);
         }
         let mut data = self.auto_stop.lock().unwrap();
         *data = auto_stop;
+    }
+
+    pub fn get_auto_stop_clicks(&self) -> i32 {
+        let data = self.auto_stop_clicks.lock().unwrap();
+        *data
     }
 
     pub fn set_auto_stop_clicks(&self, auto_stop_clicks: i32) {

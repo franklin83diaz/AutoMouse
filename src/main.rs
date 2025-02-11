@@ -1,8 +1,11 @@
 slint::include_modules!();
 mod config;
 mod mouse;
+mod database;
+
 
 use slint::ComponentHandle;
+
 
 fn main() -> Result<(), slint::PlatformError> {
     //Main Window
@@ -13,6 +16,9 @@ fn main() -> Result<(), slint::PlatformError> {
 
     // Action Bar, recording, move and Close
     mouse::others::action_bar(&main_window);
-
+    
+    database::sql::get_config();
+    
+    
     main_window.run()
 }
