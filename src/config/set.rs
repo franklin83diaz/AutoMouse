@@ -1,7 +1,7 @@
 
 use slint::SharedString;
 
-use super::strucs::{Setting, CONFIG_INSTANCE};
+use super::data::{Setting, CONFIG_INSTANCE};
 
 pub fn repeat_each(v: SharedString, main_window:&crate::slint_generatedMainWindow::MainWindow  ){
     let  conf = CONFIG_INSTANCE.get_or_init(Setting::default);

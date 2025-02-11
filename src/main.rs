@@ -8,7 +8,7 @@ use std::thread::{self, sleep};
 use std::time::Duration;
 mod config;
 use config::set::repeat_each;
-use config::strucs::{Communication, Setting, CONFIG_INSTANCE, CON_INSTANCE};
+use config::data::{Communication, Setting, CONFIG_INSTANCE, CON_INSTANCE};
 
 mod mouse;
 use mouse::process;

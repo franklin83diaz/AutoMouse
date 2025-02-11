@@ -1,2 +1,2 @@
-pub mod strucs;
+pub mod data;
 pub mod set;
