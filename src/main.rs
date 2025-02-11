@@ -1,7 +1,7 @@
 slint::include_modules!();
 use crossbeam::channel;
 use device_query::{DeviceQuery, DeviceState};
-use rdev::{listen, Event};
+use rdev::listen;
 use slint::{invoke_from_event_loop, ComponentHandle, LogicalPosition, SharedString};
 use std::thread::{self, sleep};
 
@@ -9,17 +9,24 @@ use std::time::Duration;
 mod config;
 use config::set::repeat_each;
 use config::data::{Communication, Setting, CONFIG_INSTANCE, CON_INSTANCE};
-
 mod mouse;
-use mouse::process;
+
+
+
+
 
 fn main() -> Result<(), slint::PlatformError> {
+    
+    mouse::threads::run_all_threads();
+    
     //  let (tx, rx) = channel::bounded::<i32>(1);
     let con = CON_INSTANCE.get_or_init(Communication::new);
 
     let main_window = MainWindow::new()?;
 
     let handle_weak = main_window.as_weak();
+
+ 
 
     thread::spawn(move || loop {
         let mut t = 0;
@@ -80,15 +87,7 @@ fn main() -> Result<(), slint::PlatformError> {
         repeat_each(v, &main_window_set_repeat_each);
     });
 
-    thread::spawn(|| {
-        if let Err(error) = listen(callback) {
-            eprintln!("Error: {:?}", error);
-        }
-    });
+ 
 
     main_window.run()
-}
-
-fn callback(event: Event) {
-    process::processEvent(event);
 }

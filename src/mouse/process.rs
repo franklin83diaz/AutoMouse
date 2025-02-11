@@ -7,7 +7,7 @@ use config::data::{CONFIG_INSTANCE, CON_INSTANCE};
 
 
 
-pub fn processEvent(event: Event) {
+pub fn event(event: Event) {
     let start = SystemTime::now();
     let millis = start.duration_since(UNIX_EPOCH).unwrap().as_millis();
     let config = CONFIG_INSTANCE.get().unwrap();
