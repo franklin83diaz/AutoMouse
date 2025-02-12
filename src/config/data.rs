@@ -3,6 +3,7 @@ use crossbeam::channel;
 use std::sync::Mutex;
 use std::sync::OnceLock;
 
+
 // Communication between threads
 pub struct Communication {
     ctr_press: Mutex<bool>,
