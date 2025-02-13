@@ -161,5 +161,87 @@ pub fn map_key(key: char) -> Option<rdev::Key> {
     }
 }
 
+#[derive(Debug)]
+pub struct MouseTracker {
+    time: i32,
+    left_click: bool,
+    right_click: bool,
+    x: i32,
+    y: i32,
+}
+
+impl MouseTracker {
+    pub fn new(time: i32, left_click: bool, right_click: bool, x: i32, y: i32) -> Self {
+        MouseTracker {
+            time,
+            left_click,
+            right_click,
+            x,
+            y,
+        }
+    }
+}
+
+#[derive(Default)]
+pub struct MouseTrackerList {
+    name: Mutex<String>,
+    start_time_unix: Mutex<i32>,
+    end_time_unix: Mutex<i32>,
+    list: Mutex<Vec<MouseTracker>>,
+}
+
+impl std::fmt::Display for MouseTrackerList {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+
+        let name = self.name.lock().unwrap();
+        let start_time_unix = self.start_time_unix.lock().unwrap();
+        let end_time_unix = self.end_time_unix.lock().unwrap();
+        let list = self.list.lock().unwrap();
+
+        write!(f, "name: {}, start_time_unix: {}, end_time_unix: {}, list: {:?}", *name, *end_time_unix, *start_time_unix, *list)
+    }
+}
+
+
+impl MouseTrackerList {
+
+    pub fn add(&self, mouse_tracker: MouseTracker) {
+        if cfg!(debug_assertions) {
+            println!("add mouse tracker");
+        }
+        let mut data = self.list.lock().unwrap();
+        data.push(mouse_tracker);
+    }
+
+    pub fn set_name(&self, name: String) {
+        if cfg!(debug_assertions) {
+            println!("set_name: {}", name);
+        }
+        let mut data = self.name.lock().unwrap();
+        *data = name;
+    }
+
+    pub fn set_start_time_unix(&self, time: i32) {
+        if cfg!(debug_assertions) {
+            println!("set_total_time_show: {}", time);
+        }
+        let mut data = self.start_time_unix.lock().unwrap();
+        *data = time;
+    }
+
+    pub fn set_end_time_unix(&self, time: i32) {
+        if cfg!(debug_assertions) {
+            println!("set_total_time_show: {}", time);
+        }
+        let mut data = self.end_time_unix.lock().unwrap();
+        *data = time;
+    }
+    
+
+}
+
+
+
+pub static MOUSE_TRACKER_LIST: OnceLock<MouseTrackerList> = OnceLock::new();
 pub static CON_INSTANCE: OnceLock<Communication> = OnceLock::new();
 pub static CONFIG_INSTANCE: OnceLock<Setting> = OnceLock::new();

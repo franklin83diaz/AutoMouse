@@ -1,8 +1,9 @@
-use crate::config::data::{Setting, CONFIG_INSTANCE};
+use crate::config::data::{Setting, MouseTrackerList, CONFIG_INSTANCE, MOUSE_TRACKER_LIST};
 use crate::config::set::repeat_each;
 use crate::database;
 use device_query::{DeviceQuery, DeviceState};
 use slint::{ComponentHandle, LogicalPosition, SharedString};
+use chrono::{Local, Datelike, Timelike};
 
 pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
     let handle_weak = main_window.as_weak();
@@ -28,6 +29,20 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
 
     main_window.on_record(move || {
         conf.set_recoding(true);
+        let mtl = MOUSE_TRACKER_LIST.get_or_init(MouseTrackerList::default); 
+    
+        let now = Local::now();
+        let name = format!(
+            "{:02} {:02}, {} {:02}:{:02}:{:02}",
+            now.month(),
+            now.day(),
+            now.year(),
+            now.hour(),
+            now.minute(),
+            now.second()
+        );
+        mtl.set_name(name);
+        mtl.set_start_time_unix(now.timestamp() as i32);
     });
 
     let main_window_set_repeat_each = main_window.clone_strong();

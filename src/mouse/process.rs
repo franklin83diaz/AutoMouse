@@ -2,8 +2,9 @@
 use rdev::{ Event, EventType};
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use crate::config;
-use config::data::{CONFIG_INSTANCE, CON_INSTANCE};
+use crate::config::{self, data};
+use config::data::{CONFIG_INSTANCE, CON_INSTANCE, MOUSE_TRACKER_LIST};
+use chrono::Local;
 
 
 
@@ -12,23 +13,31 @@ pub fn event(event: Event) {
     let millis = start.duration_since(UNIX_EPOCH).unwrap().as_millis();
     let config = CONFIG_INSTANCE.get().unwrap();
     let con = CON_INSTANCE.get().unwrap();
+    let mtl = MOUSE_TRACKER_LIST.get_or_init(data::MouseTrackerList::default);
+
+
     match event.event_type {
         EventType::KeyPress(rdev::Key::ControlLeft) => {
             con.set_ctr_press(true);
         }
         EventType::KeyRelease(rdev::Key::ControlLeft) => {
             con.set_ctr_press(false);
-           
+            
         }
         EventType::KeyPress(rdev::Key::KeyQ) => {
             if con.get_ctr_press() {
                 if cfg!(debug_assertions) {
                 println!("Key Q pressed");
                 }
+                let now = Local::now();
+                mtl.set_end_time_unix(now.timestamp() as i32);
+                println!("------------------------------");
+                println!( "{}", mtl);
+                println!("------------------------------");
                 config.set_recoding(false);
                 con.tx.send(1).unwrap()
             }
-          ;
+          return;
         }
 
         EventType::MouseMove { x, y } => {
@@ -43,5 +52,11 @@ pub fn event(event: Event) {
             println!("Mouse button released: {:?}", button);
         }
         _ => {}
+    }
+    
+
+    if config.get_recoding() {
+        let mouse_tracker = data::MouseTracker::new( 1, false, false, 0, 0 );
+        mtl.add(mouse_tracker);
     }
 }
