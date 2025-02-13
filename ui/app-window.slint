@@ -11,6 +11,7 @@ export component MainWindow inherits Window {
     property <bool> showListMacros: false;
     
     in-out property <bool> recording: false;
+    in-out property <bool> repeat: false;
     in-out property <string> repeat_each:"1";
     in-out property <string> auto_stop_clicks:"1";
     in property <string> time: "00:00:00";
@@ -18,9 +19,9 @@ export component MainWindow inherits Window {
     callback move_windows();
     callback record();
     callback set_repeat(bool);
+    callback set_auto_stop(bool);
     callback set_repeat_each(string);
     callback set_key_stop(string);
-    callback set_auto_stop(bool);
     callback set_auto_stop_clicks(string);
 
     width: 400px;
@@ -143,7 +144,7 @@ export component MainWindow inherits Window {
             set_auto_stop_clicks (auto_stop_each) => {
                 set_auto_stop_clicks(auto_stop_each);} 
         
-                
+                repeat <=> repeat;
                 repeat_each <=> repeat_each;
                 auto_stop_clicks <=> auto_stop_clicks;
         }

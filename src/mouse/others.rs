@@ -1,5 +1,5 @@
 use crate::config::data::{Setting, MouseTrackerList, CONFIG_INSTANCE, MOUSE_TRACKER_LIST};
-use crate::config::set::repeat_each;
+use crate::config::set::{repeat_each, auto_stop_clicks};
 use crate::database;
 use device_query::{DeviceQuery, DeviceState};
 use slint::{ComponentHandle, LogicalPosition, SharedString};
@@ -26,6 +26,12 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
         conf.set_repeat(v);
         database::sql::update_config();
     });
+    
+    //TODO FIX:
+    // main_window.on_set_auto_stop_clicks(move |v| {
+    //     auto_stop_clicks(v, &main_window);
+    //     database::sql::update_config();
+    // });
 
     main_window.on_record(move || {
         conf.set_recoding(true);
@@ -57,10 +63,12 @@ pub fn sync_ui(main_window: &crate::slint_generatedMainWindow::MainWindow) {
     let handle_weak = main_window.as_weak();
     if let Some(main_window) = handle_weak.upgrade() {
         if cfg!(debug_assertions) {
-            //println!("repeat: {}", conf.get_repeat());
+            println!("repeat: {}", conf.get_repeat());
             println!("repeat_each: {}", conf.get_repeat_each());
         }
 
         main_window.set_repeat_each(SharedString::from(conf.get_repeat_each().to_string()));
+        main_window.set_repeat(conf.get_repeat());
+        main_window.set_auto_stop_clicks(SharedString::from(conf.get_auto_stop_clicks().to_string()));
     }
 }
