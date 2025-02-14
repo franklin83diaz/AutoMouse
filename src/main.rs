@@ -1,6 +1,6 @@
 slint::include_modules!();
 mod config;
-mod mouse;
+mod app;
 mod database;
 
 
@@ -15,14 +15,14 @@ fn main() -> Result<(), slint::PlatformError> {
     let main_window = MainWindow::new()?;
 
     // Run All Threads
-    mouse::threads::run_all_threads(&main_window);
+    app::threads::run_all_threads(&main_window);
     
 
     // Action Bar, recording, move and Close
-    mouse::others::action_bar(&main_window);
+    app::actions_ui::action_bar(&main_window);
 
     // Sync UI
-    mouse::others::sync_ui(&main_window);
+    app::actions_ui::sync_ui(&main_window);
     
     main_window.run()
 }
