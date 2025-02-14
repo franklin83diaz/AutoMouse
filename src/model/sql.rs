@@ -117,10 +117,8 @@ pub fn sync_config_from_db() {
     }
 }
 
-// TODO:
-
 //Mouse Macros
-pub fn set_mouse_macro() {
+pub fn save_mouse_macro() {
     let conn = connect().unwrap();
 
     //Create if not exists
@@ -183,18 +181,32 @@ pub fn set_mouse_macro() {
     );
 
     match result {
-        Ok(id) => {
+        Ok(_) => {
+            let id = conn.last_insert_rowid();
             if cfg!(debug_assertions) {
                 println!("Mouse macro set successfully");
             }
 
-            //TODO:
             let list = mouse_tracker.list.lock().unwrap();
             list.iter().for_each(|mouse_tracker| {
                 if cfg!(debug_assertions) {
                     println!("mouse tracker: {:?}", mouse_tracker);
                 }
+                let (time_milliseconds, left_click, right_click, x, y) =
+                mouse_tracker.get_tuple();
+
+                // conver time_milliseconds to i64
+                let time_milliseconds = time_milliseconds as i64;
+
+                let _ = conn.execute(
+                    "INSERT INTO mouse_tracker (id_list, time_milliseconds, left_click, right_click, x, y) VALUES (?, ?, ?, ?, ?, ?)",
+                    rusqlite::params![id, time_milliseconds, left_click, right_click, x, y],
+                );
             });
+
+            if cfg!(debug_assertions) {
+                println!("id: {}", id );
+            }
         }
         Err(err) => {
             if cfg!(debug_assertions) {
