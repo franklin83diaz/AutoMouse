@@ -1,4 +1,4 @@
-use crate::config::data::{Setting, CONFIG_INSTANCE};
+use crate::config::data::{MouseTrackerList, Setting, CONFIG_INSTANCE, MOUSE_TRACKER_LIST};
 use rusqlite::{Connection, Result};
 
 fn connect() -> Result<Connection> {
@@ -76,6 +76,24 @@ pub fn update_config() {
 
 pub fn sync_config_from_db() {
     let conn = connect().unwrap();
+
+    // Create Database for mouse tracker in this point
+    //Create if not exists
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS mouse_tracker_list (
+        id INTEGER PRIMARY KEY,
+        mid TEXT,
+        name TEXT,
+        time_milliseconds INTEGER,
+        x INTEGER,
+        y INTEGER,
+        left_click BOOLEAN,
+        right_click BOOLEAN,
+    )",
+        [],
+    )
+    .unwrap();
+
     let mut stmt_result = conn.prepare("SELECT * FROM config");
 
     match stmt_result {
@@ -114,4 +132,42 @@ pub fn sync_config_from_db() {
             return;
         }
     }
+}
+
+// TODO:
+
+//Mouse Macros
+pub fn set_mouse_macro() {
+    let mouse_tracker =MOUSE_TRACKER_LIST.get().unwrap();
+    let conn = connect().unwrap();
+    let (name, start_time_unix, end_time_unix) = mouse_tracker.get_name_times();
+
+    let result = conn.execute(
+        "INSERT INTO mouse_tracker_list (name, start_time_unix, end_time_unix) VALUES (?, ?, ?)",
+        rusqlite::params![name, start_time_unix, end_time_unix],
+    );
+
+    match result {
+        Ok(id) => {
+            if cfg!(debug_assertions) {
+                println!("Mouse macro set successfully");
+            }   
+
+            //TODO:
+             let list = mouse_tracker.list.lock().unwrap();
+            list.iter().for_each(|mouse_tracker| {
+                if cfg!(debug_assertions) {
+                    println!("mouse tracker: {:?}", mouse_tracker);
+                }
+            });
+
+        }
+        Err(err) => {
+            if cfg!(debug_assertions) {
+                println!("Error setting mouse macro: {}", err);
+            }
+        }
+    }
+
+    conn.close().unwrap();
 }

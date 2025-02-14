@@ -171,7 +171,7 @@ pub fn map_key(key: char) -> (char, rdev::Key) {
 
 #[derive(Debug)]
 pub struct MouseTracker {
-    time: i32,
+    time_milliseconds: i32,
     left_click: bool,
     right_click: bool,
     x: i32,
@@ -179,9 +179,9 @@ pub struct MouseTracker {
 }
 
 impl MouseTracker {
-    pub fn new(time: i32, left_click: bool, right_click: bool, x: i32, y: i32) -> Self {
+    pub fn new(time_milliseconds: i32, left_click: bool, right_click: bool, x: i32, y: i32) -> Self {
         MouseTracker {
-            time,
+            time_milliseconds,
             left_click,
             right_click,
             x,
@@ -195,7 +195,7 @@ pub struct MouseTrackerList {
     name: Mutex<String>,
     start_time_unix: Mutex<i32>,
     end_time_unix: Mutex<i32>,
-    list: Mutex<Vec<MouseTracker>>,
+ pub   list: Mutex<Vec<MouseTracker>>,
 }
 
 impl std::fmt::Display for MouseTrackerList {
@@ -245,6 +245,14 @@ impl MouseTrackerList {
         *data = time;
     }
     
+    pub fn get_name_times(&self) -> (String, i32, i32) {
+        let name = self.name.lock().unwrap();
+        let start_time_unix = self.start_time_unix.lock().unwrap();
+        let end_time_unix = self.end_time_unix.lock().unwrap();
+
+        (name.clone(), *start_time_unix, *end_time_unix)
+    }
+
 
 }
 
