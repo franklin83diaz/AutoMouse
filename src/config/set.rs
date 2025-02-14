@@ -19,15 +19,15 @@ pub fn repeat_each(v: SharedString, main_window:&crate::slint_generatedMainWindo
 
     conf.set_repeat_each(n.unwrap());
     
-    let each_return = SharedString::from(n.unwrap().to_string());
-    main_window.set_repeat_each(each_return);
+    let value = SharedString::from(n.unwrap().to_string());
+    main_window.set_repeat_each(value);
 }
 
 pub fn auto_stop_clicks(v: SharedString, main_window:&crate::slint_generatedMainWindow::MainWindow  ){
-    let  conf = CONFIG_INSTANCE.get_or_init(Setting::default);
+    let  conf = CONFIG_INSTANCE.get();
     
     if v.is_empty() {
-            conf.set_auto_stop_clicks(1);
+            conf.unwrap().set_auto_stop_clicks(1);
         return;
     }
 
@@ -37,10 +37,10 @@ pub fn auto_stop_clicks(v: SharedString, main_window:&crate::slint_generatedMain
         n = Some(10);
     }
 
-    conf.set_auto_stop_clicks(n.unwrap());
+    conf.unwrap().set_auto_stop_clicks(n.unwrap());
     
-    let each_return = SharedString::from(n.unwrap().to_string());
-    main_window.set_auto_stop_clicks(each_return);
+    let value = SharedString::from(n.unwrap().to_string());
+    main_window.set_auto_stop_clicks(value);
 }
 
 fn parse_int(input: &str) -> Option<i32> {

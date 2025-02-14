@@ -26,12 +26,11 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
         conf.set_repeat(v);
         database::sql::update_config();
     });
-    
-    //TODO FIX:
-    // main_window.on_set_auto_stop_clicks(move |v| {
-    //     auto_stop_clicks(v, &main_window);
-    //     database::sql::update_config();
-    // });
+    let main_window_clone = main_window.clone_strong();
+    main_window.on_set_auto_stop_clicks(move |v| {
+        auto_stop_clicks(v, &main_window_clone);
+        database::sql::update_config();
+    });
 
     main_window.on_record(move || {
         conf.set_recoding(true);
@@ -51,9 +50,9 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
         mtl.set_start_time_unix(now.timestamp() as i32);
     });
 
-    let main_window_set_repeat_each = main_window.clone_strong();
+    let main_window_clone = main_window.clone_strong();
     main_window.on_set_repeat_each(move |v| {
-        repeat_each(v, &main_window_set_repeat_each);
+        repeat_each(v, &main_window_clone);
         database::sql::update_config();
     });
 }

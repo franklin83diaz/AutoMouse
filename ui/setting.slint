@@ -169,10 +169,12 @@ export component Setting inherits Rectangle {
             LineEdit {
                 width: 50px;
                 height: 20px;
-                text: "1";
+                text <=> auto_stop_clicks;
+                placeholder-text: "1";
                 font-size: 16px;
                 input-type: number;
                 edited(text) => {
+                    set_auto_stop_clicks(text);
                 }
             }
 
