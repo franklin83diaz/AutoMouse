@@ -1,6 +1,6 @@
 use crate::config::data::{MouseTrackerList, Setting, CONFIG_INSTANCE, MOUSE_TRACKER_LIST, map_key};
 use crate::config::set::{auto_stop_clicks, repeat_each, key_stop};
-use crate::database;
+use crate::model;
 use chrono::{Datelike, Local, Timelike};
 use device_query::{DeviceQuery, DeviceState};
 use slint::{ComponentHandle, LogicalPosition, SharedString};
@@ -53,7 +53,7 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
     // Repeat
     main_window.on_set_repeat(move |v| {
         conf.set_repeat(v);
-        database::sql::update_config();
+        model::sql::update_config();
     });
 
     // Repeat Each
@@ -61,20 +61,20 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
     main_window.on_set_repeat_each(move |v| {
         // Need main_window for update the value in the ui when is out range
         repeat_each(v, &main_window_clone);
-        database::sql::update_config();
+        model::sql::update_config();
     });
 
     // Key Stop
     let main_window_clone = main_window.clone_strong();
     main_window.on_set_key_stop(move |v| {
         key_stop(v, &main_window_clone);
-        database::sql::update_config();
+        model::sql::update_config();
     });
 
     // Auto Stop
     main_window.on_set_auto_stop(move |v| {
         conf.set_auto_stop(v);
-        database::sql::update_config();
+        model::sql::update_config();
     });
 
     // Auto Stop Clicks
@@ -82,7 +82,7 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
     main_window.on_set_auto_stop_clicks(move |v| {
         // Need main_window for update the value in the ui when is out range
         auto_stop_clicks(v, &main_window_clone);
-        database::sql::update_config();
+        model::sql::update_config();
     });
 }
 

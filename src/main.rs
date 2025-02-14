@@ -1,13 +1,13 @@
 slint::include_modules!();
 mod app;
 mod config;
-mod database;
+mod model;
 
 use slint::ComponentHandle;
 
 fn main() -> Result<(), slint::PlatformError> {
     // Sync Config db
-    database::sql::sync_config_from_db();
+    model::sql::sync_config_from_db();
 
     //Main Window
     let main_window = MainWindow::new()?;

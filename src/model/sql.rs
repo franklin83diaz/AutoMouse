@@ -77,23 +77,6 @@ pub fn update_config() {
 pub fn sync_config_from_db() {
     let conn = connect().unwrap();
 
-    // Create Database for mouse tracker in this point
-    //Create if not exists
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS mouse_tracker_list (
-        id INTEGER PRIMARY KEY,
-        mid TEXT,
-        name TEXT,
-        time_milliseconds INTEGER,
-        x INTEGER,
-        y INTEGER,
-        left_click BOOLEAN,
-        right_click BOOLEAN,
-    )",
-        [],
-    )
-    .unwrap();
-
     let mut stmt_result = conn.prepare("SELECT * FROM config");
 
     match stmt_result {
@@ -128,7 +111,7 @@ pub fn sync_config_from_db() {
             if cfg!(debug_assertions) {
                 println!("create table config and insert default values");
             }
-            crate::database::sql::set_config();
+            crate::model::sql::set_config();
             return;
         }
     }
@@ -138,7 +121,59 @@ pub fn sync_config_from_db() {
 
 //Mouse Macros
 pub fn set_mouse_macro() {
-    let mouse_tracker =MOUSE_TRACKER_LIST.get().unwrap();
+    let conn = connect().unwrap();
+
+    //Create if not exists
+    let result = conn.execute(
+        "CREATE TABLE IF NOT EXISTS mouse_tracker_list (
+        id INTEGER PRIMARY KEY,
+        name TEXT,
+        start_time_unix INTEGER,
+        end_time_unix INTEGER
+    )",
+        [],
+    );
+
+    match result {
+        Ok(_) => {
+            if cfg!(debug_assertions) {
+                println!("Table mouse_tracker_list created successfully");
+            }
+        }
+        Err(err) => {
+            if cfg!(debug_assertions) {
+                println!("Error creating table mouse_tracker_list: {}", err);
+            }
+        }
+    }
+
+    let result = conn.execute(
+        "CREATE TABLE IF NOT EXISTS mouse_tracker (
+        id INTEGER PRIMARY KEY,
+        id_list TEXT,
+        time_milliseconds INTEGER,
+        left_click boolean,
+        right_click boolean,
+        x INTEGER,
+        y INTEGER
+    )",
+        [],
+    );
+
+    match result {
+        Ok(_) => {
+            if cfg!(debug_assertions) {
+                println!("Table mouse_tracker created successfully");
+            }
+        }
+        Err(err) => {
+            if cfg!(debug_assertions) {
+                println!("Error creating table mouse_tracker: {}", err);
+            }
+        }
+    }
+
+    let mouse_tracker = MOUSE_TRACKER_LIST.get().unwrap();
     let conn = connect().unwrap();
     let (name, start_time_unix, end_time_unix) = mouse_tracker.get_name_times();
 
@@ -151,16 +186,15 @@ pub fn set_mouse_macro() {
         Ok(id) => {
             if cfg!(debug_assertions) {
                 println!("Mouse macro set successfully");
-            }   
+            }
 
             //TODO:
-             let list = mouse_tracker.list.lock().unwrap();
+            let list = mouse_tracker.list.lock().unwrap();
             list.iter().for_each(|mouse_tracker| {
                 if cfg!(debug_assertions) {
                     println!("mouse tracker: {:?}", mouse_tracker);
                 }
             });
-
         }
         Err(err) => {
             if cfg!(debug_assertions) {

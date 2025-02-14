@@ -4,6 +4,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use crate::config::{self, data, data::map_key};
 use chrono::Local;
 use config::data::{CONFIG_INSTANCE, CON_INSTANCE, MOUSE_TRACKER_LIST};
+use crate::model::sql;
 
 pub fn event(event: Event) {
     let start = SystemTime::now();
@@ -32,7 +33,8 @@ pub fn event(event: Event) {
                 println!("{}", mtl);
                 println!("------------------------------");
                 config.set_recoding(false);
-                con.tx.send(1).unwrap()
+                con.tx.send(1).unwrap();
+                sql::set_mouse_macro();
             }
             return;
         }
