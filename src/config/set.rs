@@ -1,8 +1,11 @@
 
 use slint::SharedString;
 
-use super::data::{Setting, CONFIG_INSTANCE};
+use super::data::{Setting, CONFIG_INSTANCE, map_key};
+// Repeat
+// No need set function, is same type bool
 
+// Repeat Each
 pub fn repeat_each(v: SharedString, main_window:&crate::slint_generatedMainWindow::MainWindow  ){
     let  conf = CONFIG_INSTANCE.get_or_init(Setting::default);
     
@@ -22,6 +25,27 @@ pub fn repeat_each(v: SharedString, main_window:&crate::slint_generatedMainWindo
     let value = SharedString::from(n.unwrap().to_string());
     main_window.set_repeat_each(value);
 }
+
+// Key Stop
+pub fn key_stop(v: SharedString, main_window:&crate::slint_generatedMainWindow::MainWindow  ){
+    let  conf = CONFIG_INSTANCE.get();
+    
+    if v.is_empty() {
+            conf.unwrap().set_key_stop('q');
+        return;
+    }
+
+    let mut k = v.chars().next().unwrap();
+
+    // convert to lowercase
+    k = k.to_lowercase().next().unwrap();
+
+    conf.unwrap().set_key_stop(k);
+    
+    let value = SharedString::from(map_key(k).0.to_string());
+    main_window.set_key_stop(value);
+}
+
 
 pub fn auto_stop_clicks(v: SharedString, main_window:&crate::slint_generatedMainWindow::MainWindow  ){
     let  conf = CONFIG_INSTANCE.get();

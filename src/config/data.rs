@@ -47,6 +47,7 @@ pub struct Setting {
 }
 
 impl Setting {
+    // Recoding
     pub fn set_recoding(&self, recoding: bool) {
         if cfg!(debug_assertions) {
             println!("set_recoding: {}", recoding);
@@ -60,6 +61,7 @@ impl Setting {
         *data
     }
 
+    // Repeat
     pub fn set_repeat(&self, repeat: bool) {
         if cfg!(debug_assertions) {
             println!("set_repeat: {}", repeat);
@@ -73,11 +75,7 @@ impl Setting {
         *data
     }
 
-    pub fn get_repeat_each(&self) -> i32 {
-        let data = self.repeat_each.lock().unwrap();
-        *data
-    }
-
+    // Repeat Each
     pub fn set_repeat_each(&self, repeat_each: i32) {
         if cfg!(debug_assertions) {
             println!("set_repeat_each: {}", repeat_each);
@@ -86,6 +84,13 @@ impl Setting {
         let mut data = self.repeat_each.lock().unwrap();
         *data = repeat_each;
     }
+
+    pub fn get_repeat_each(&self) -> i32 {
+        let data = self.repeat_each.lock().unwrap();
+        *data
+    }
+
+
 
     pub fn get_key_stop(&self) -> char {
         let data = self.key_stop.lock().unwrap();
@@ -129,35 +134,35 @@ impl Setting {
 
 //mapping chat to key
 // Default to Q
-pub fn map_key(key: char) -> Option<rdev::Key> {
+pub fn map_key(key: char) -> (char, rdev::Key) {
     match key {
-        'a' => Some(rdev::Key::KeyA),
-        'b' => Some(rdev::Key::KeyB),
-        'c' => Some(rdev::Key::KeyC),
-        'd' => Some(rdev::Key::KeyD),
-        'e' => Some(rdev::Key::KeyE),
-        'f' => Some(rdev::Key::KeyF),
-        'g' => Some(rdev::Key::KeyG),
-        'h' => Some(rdev::Key::KeyH),
-        'i' => Some(rdev::Key::KeyI),
-        'j' => Some(rdev::Key::KeyJ),
-        'k' => Some(rdev::Key::KeyK),
-        'l' => Some(rdev::Key::KeyL),
-        'm' => Some(rdev::Key::KeyM),
-        'n' => Some(rdev::Key::KeyN),
-        'o' => Some(rdev::Key::KeyO),
-        'p' => Some(rdev::Key::KeyP),
-        'q' => Some(rdev::Key::KeyQ),
-        'r' => Some(rdev::Key::KeyR),
-        's' => Some(rdev::Key::KeyS),
-        't' => Some(rdev::Key::KeyT),
-        'u' => Some(rdev::Key::KeyU),
-        'v' => Some(rdev::Key::KeyV),
-        'w' => Some(rdev::Key::KeyW),
-        'x' => Some(rdev::Key::KeyX),
-        'y' => Some(rdev::Key::KeyY),
-        'z' => Some(rdev::Key::KeyZ),
-        _ => Some(rdev::Key::KeyQ),
+        'a' => ('A', rdev::Key::KeyA),
+        'b' => ('B', rdev::Key::KeyB),
+        'c' => ('C', rdev::Key::KeyC),
+        'd' => ('D', rdev::Key::KeyD),
+        'e' => ('E', rdev::Key::KeyE),
+        'f' => ('F', rdev::Key::KeyF),
+        'g' => ('G', rdev::Key::KeyG),
+        'h' => ('H', rdev::Key::KeyH),
+        'i' => ('I', rdev::Key::KeyI),
+        'j' => ('J', rdev::Key::KeyJ),
+        'k' => ('K', rdev::Key::KeyK),
+        'l' => ('L', rdev::Key::KeyL),
+        'm' => ('M', rdev::Key::KeyM),
+        'n' => ('N', rdev::Key::KeyN),
+        'o' => ('O', rdev::Key::KeyO),
+        'p' => ('P', rdev::Key::KeyP),
+        'q' => ('Q', rdev::Key::KeyQ),
+        'r' => ('R', rdev::Key::KeyR),
+        's' => ('S', rdev::Key::KeyS),
+        't' => ('T', rdev::Key::KeyT),
+        'u' => ('U', rdev::Key::KeyU),
+        'v' => ('V', rdev::Key::KeyV),
+        'w' => ('W', rdev::Key::KeyW),
+        'x' => ('X', rdev::Key::KeyX),
+        'y' => ('Y', rdev::Key::KeyY),
+        'z' => ('Z', rdev::Key::KeyZ),
+        _ => ('Q', rdev::Key::KeyQ),
     }
 }
 

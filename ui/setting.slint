@@ -7,10 +7,11 @@ export component Setting inherits Rectangle {
     
     property <image> check: @image-url("icons/check_box_outline_blank_18dp_1C1B1F_FILL0_wght400_GRAD0_opsz20.png");
 
-    in-out property <string> keyStop: "q";
-    in-out property <bool> repeat: false;
-    in-out property <string> repeat_each: "1";
-    in-out property <string> auto_stop_clicks: "1";
+    in-out property <string> key_stop;
+    in-out property <bool> repeat;
+    in-out property <bool> auto_stop;
+    in-out property <string> repeat_each;
+    in-out property <string> auto_stop_clicks;
     
     callback set_repeat(bool);
     callback set_repeat_each(string);
@@ -88,12 +89,13 @@ export component Setting inherits Rectangle {
                         debug(event);
                         if (event.modifiers.control) {
                             PressKey = false;
-                            keyStop = event.text;
+                            set_key_stop(event.text);
                         }
                         accept
                     }
                     focus-changed-event => {
                         PressKey = self.has-focus;
+
                     }
                 }
                 Rectangle {
@@ -109,7 +111,7 @@ export component Setting inherits Rectangle {
                         source: @image-url("icons/keymod.png");
 
                         Text {
-                            text: "ctrl";
+                            text: "Ctrl";
                             color: #888888;
                         }
                     }
@@ -130,7 +132,7 @@ export component Setting inherits Rectangle {
                     }
 
                     Text {
-                        text: keyStop;
+                        text: key_stop;
                         color: #888888;
                     }
                 }
@@ -158,6 +160,10 @@ export component Setting inherits Rectangle {
                 width: 25px;
                 height: 20px;
                 padding: 0px;
+                checked <=> auto_stop;
+                toggled => {
+                    set_auto_stop(auto_stop);
+                }
             }
 
             Text {
@@ -174,7 +180,7 @@ export component Setting inherits Rectangle {
                 font-size: 16px;
                 input-type: number;
                 edited(text) => {
-                    set_auto_stop_clicks(text);
+                    set_auto_stop_clicks(auto_stop_clicks);
                 }
             }
 
