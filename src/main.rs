@@ -1,11 +1,9 @@
 slint::include_modules!();
-mod config;
 mod app;
+mod config;
 mod database;
 
-
 use slint::ComponentHandle;
-
 
 fn main() -> Result<(), slint::PlatformError> {
     // Sync Config db
@@ -16,13 +14,13 @@ fn main() -> Result<(), slint::PlatformError> {
 
     // Run All Threads
     app::threads::run_all_threads(&main_window);
-    
 
     // Action Bar, recording, move and Close
     app::actions_ui::action_bar(&main_window);
 
     // Sync UI
+    // The copy of the config running in memory is used for fast validation actions in process events
     app::actions_ui::sync_ui(&main_window);
-    
+
     main_window.run()
 }
