@@ -1,12 +1,9 @@
-
-use rdev::{ Event, EventType};
+use rdev::{Event, EventType};
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use crate::config::{self, data};
-use config::data::{CONFIG_INSTANCE, CON_INSTANCE, MOUSE_TRACKER_LIST};
+use crate::config::{self, data, data::map_key};
 use chrono::Local;
-
-
+use config::data::{CONFIG_INSTANCE, CON_INSTANCE, MOUSE_TRACKER_LIST};
 
 pub fn event(event: Event) {
     let start = SystemTime::now();
@@ -14,30 +11,30 @@ pub fn event(event: Event) {
     let config = CONFIG_INSTANCE.get().unwrap();
     let con = CON_INSTANCE.get().unwrap();
     let mtl = MOUSE_TRACKER_LIST.get_or_init(data::MouseTrackerList::default);
-
-
+    let mk = map_key(config.get_key_stop());
+    let _key_stop = mk.1;
     match event.event_type {
         EventType::KeyPress(rdev::Key::ControlLeft) => {
             con.set_ctr_press(true);
         }
         EventType::KeyRelease(rdev::Key::ControlLeft) => {
             con.set_ctr_press(false);
-            
         }
-        EventType::KeyPress(rdev::Key::KeyQ) => {
+        EventType::KeyPress(key) if key == _key_stop => {
             if con.get_ctr_press() {
                 if cfg!(debug_assertions) {
-                println!("Key Q pressed");
+                    println!("Key {} pressed", mk.0);
                 }
+
                 let now = Local::now();
                 mtl.set_end_time_unix(now.timestamp() as i32);
                 println!("------------------------------");
-                println!( "{}", mtl);
+                println!("{}", mtl);
                 println!("------------------------------");
                 config.set_recoding(false);
                 con.tx.send(1).unwrap()
             }
-          return;
+            return;
         }
 
         EventType::MouseMove { x, y } => {
@@ -53,10 +50,9 @@ pub fn event(event: Event) {
         }
         _ => {}
     }
-    
 
     if config.get_recoding() {
-        let mouse_tracker = data::MouseTracker::new( 1, false, false, 0, 0 );
+        let mouse_tracker = data::MouseTracker::new(1, false, false, 0, 0);
         mtl.add(mouse_tracker);
     }
 }

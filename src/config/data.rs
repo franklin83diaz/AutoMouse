@@ -2,6 +2,7 @@ use channel::{Receiver, Sender};
 use crossbeam::channel;
 use std::sync::Mutex;
 use std::sync::OnceLock;
+use rdev::Key;
 
 
 // Communication between threads
@@ -131,6 +132,8 @@ impl Setting {
         *data = auto_stop_clicks;
     }
 }
+
+
 
 //mapping chat to key
 // Default to Q
