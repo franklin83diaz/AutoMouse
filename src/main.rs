@@ -2,8 +2,12 @@ slint::include_modules!();
 mod app;
 mod config;
 mod model;
+mod state;
 
 use slint::ComponentHandle;
+use rdev::EventType;
+use model::mouse::{MOUSE_EVENT_LIST, mouse_event_list};
+use state::global::{RECODIND_META_DATA, RecodingMetaData};
 
 fn main() -> Result<(), slint::PlatformError> {
     // Sync Config db
@@ -21,6 +25,13 @@ fn main() -> Result<(), slint::PlatformError> {
     // Sync UI
     // The copy of the config running in memory is used for fast validation actions in process events
     app::actions_ui::sync_ui(&main_window);
+
+    app::send::send(&EventType::MouseMove { x: 400.0, y: 400.0 });
+
+    // Init mouse_event_list
+    let _ = MOUSE_EVENT_LIST.get_or_init(mouse_event_list::default);
+    // init state
+    let _ = RECODIND_META_DATA.get_or_init(RecodingMetaData::default);
 
     main_window.run()
 }

@@ -1,9 +1,11 @@
-use crate::config::data::{MouseTrackerList, Setting, CONFIG_INSTANCE, MOUSE_TRACKER_LIST, map_key};
+use crate::config::data::{ Setting, CONFIG_INSTANCE, map_key};
 use crate::config::set::{auto_stop_clicks, repeat_each, key_stop};
+use crate::state::global::{RECODIND_META_DATA, RecodingMetaData};
 use crate::model;
 use chrono::{Datelike, Local, Timelike};
 use device_query::{DeviceQuery, DeviceState};
 use slint::{ComponentHandle, LogicalPosition, SharedString};
+use model::mouse::{MOUSE_EVENT_LIST, mouse_event_list};
 
 pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
     let conf = CONFIG_INSTANCE.get_or_init(Setting::default);
@@ -27,7 +29,8 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
     // Recording
     main_window.on_record(move || {
         conf.set_recoding(true);
-        let mtl = MOUSE_TRACKER_LIST.get_or_init(MouseTrackerList::default);
+        let mel = MOUSE_EVENT_LIST.get().unwrap();
+        let metadata = RECODIND_META_DATA.get().unwrap();
 
         let now = Local::now();
         let name = format!(
@@ -39,8 +42,10 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
             now.minute(),
             now.second()
         );
-        mtl.set_name(name);
-        mtl.set_start_time_unix(now.timestamp() as i32);
+        mel.set_name(name);
+        //set start time in global
+        metadata.set_start_time_unix(now.timestamp() as i32);
+
     });
 
     // List

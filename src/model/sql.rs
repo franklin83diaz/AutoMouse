@@ -1,4 +1,4 @@
-use crate::config::data::{MouseTrackerList, Setting, CONFIG_INSTANCE, MOUSE_TRACKER_LIST};
+use crate::config::data::{ Setting, CONFIG_INSTANCE};
 use rusqlite::{Connection, Result};
 
 fn connect() -> Result<Connection> {
@@ -118,102 +118,102 @@ pub fn sync_config_from_db() {
 }
 
 //Mouse Macros
-pub fn save_mouse_macro() {
-    let conn = connect().unwrap();
+// pub fn save_mouse_macro() {
+//     let conn = connect().unwrap();
 
-    //Create if not exists
-    let result = conn.execute(
-        "CREATE TABLE IF NOT EXISTS mouse_tracker_list (
-        id INTEGER PRIMARY KEY,
-        name TEXT,
-        start_time_unix INTEGER,
-        end_time_unix INTEGER
-    )",
-        [],
-    );
+//     //Create if not exists
+//     let result = conn.execute(
+//         "CREATE TABLE IF NOT EXISTS mouse_tracker_list (
+//         id INTEGER PRIMARY KEY,
+//         name TEXT,
+//         start_time_unix INTEGER,
+//         end_time_unix INTEGER
+//     )",
+//         [],
+//     );
 
-    match result {
-        Ok(_) => {
-            if cfg!(debug_assertions) {
-                println!("Table mouse_tracker_list created successfully");
-            }
-        }
-        Err(err) => {
-            if cfg!(debug_assertions) {
-                println!("Error creating table mouse_tracker_list: {}", err);
-            }
-        }
-    }
+//     match result {
+//         Ok(_) => {
+//             if cfg!(debug_assertions) {
+//                 println!("Table mouse_tracker_list created successfully");
+//             }
+//         }
+//         Err(err) => {
+//             if cfg!(debug_assertions) {
+//                 println!("Error creating table mouse_tracker_list: {}", err);
+//             }
+//         }
+//     }
 
-    let result = conn.execute(
-        "CREATE TABLE IF NOT EXISTS mouse_tracker (
-        id INTEGER PRIMARY KEY,
-        id_list TEXT,
-        time_milliseconds INTEGER,
-        left_click boolean,
-        right_click boolean,
-        x INTEGER,
-        y INTEGER
-    )",
-        [],
-    );
+//     let result = conn.execute(
+//         "CREATE TABLE IF NOT EXISTS mouse_tracker (
+//         id INTEGER PRIMARY KEY,
+//         id_list TEXT,
+//         time_milliseconds INTEGER,
+//         left_click boolean,
+//         right_click boolean,
+//         x INTEGER,
+//         y INTEGER
+//     )",
+//         [],
+//     );
 
-    match result {
-        Ok(_) => {
-            if cfg!(debug_assertions) {
-                println!("Table mouse_tracker created successfully");
-            }
-        }
-        Err(err) => {
-            if cfg!(debug_assertions) {
-                println!("Error creating table mouse_tracker: {}", err);
-            }
-        }
-    }
+//     match result {
+//         Ok(_) => {
+//             if cfg!(debug_assertions) {
+//                 println!("Table mouse_tracker created successfully");
+//             }
+//         }
+//         Err(err) => {
+//             if cfg!(debug_assertions) {
+//                 println!("Error creating table mouse_tracker: {}", err);
+//             }
+//         }
+//     }
 
-    let mouse_tracker = MOUSE_TRACKER_LIST.get().unwrap();
-    let conn = connect().unwrap();
-    let (name, start_time_unix, end_time_unix) = mouse_tracker.get_name_times();
+//     let mouse_tracker = MOUSE_TRACKER_LIST.get().unwrap();
+//     let conn = connect().unwrap();
+//     let (name, start_time_unix, end_time_unix) = mouse_tracker.get_name_times();
 
-    let result = conn.execute(
-        "INSERT INTO mouse_tracker_list (name, start_time_unix, end_time_unix) VALUES (?, ?, ?)",
-        rusqlite::params![name, start_time_unix, end_time_unix],
-    );
+//     let result = conn.execute(
+//         "INSERT INTO mouse_tracker_list (name, start_time_unix, end_time_unix) VALUES (?, ?, ?)",
+//         rusqlite::params![name, start_time_unix, end_time_unix],
+//     );
 
-    match result {
-        Ok(_) => {
-            let id = conn.last_insert_rowid();
-            if cfg!(debug_assertions) {
-                println!("Mouse macro set successfully");
-            }
+//     match result {
+//         Ok(_) => {
+//             let id = conn.last_insert_rowid();
+//             if cfg!(debug_assertions) {
+//                 println!("Mouse macro set successfully");
+//             }
 
-            let list = mouse_tracker.list.lock().unwrap();
-            list.iter().for_each(|mouse_tracker| {
-                if cfg!(debug_assertions) {
-                    println!("mouse tracker: {:?}", mouse_tracker);
-                }
-                let (time_milliseconds, left_click, right_click, x, y) =
-                mouse_tracker.get_tuple();
+//             let list = mouse_tracker.list.lock().unwrap();
+//             list.iter().for_each(|mouse_tracker| {
+//                 if cfg!(debug_assertions) {
+//                     println!("mouse tracker: {:?}", mouse_tracker);
+//                 }
+//                 let (time_milliseconds, left_click, right_click, x, y) =
+//                 mouse_tracker.get_tuple();
 
-                // conver time_milliseconds to i64
-                let time_milliseconds = time_milliseconds as i64;
+//                 // conver time_milliseconds to i64
+//                 let time_milliseconds = time_milliseconds as i64;
 
-                let _ = conn.execute(
-                    "INSERT INTO mouse_tracker (id_list, time_milliseconds, left_click, right_click, x, y) VALUES (?, ?, ?, ?, ?, ?)",
-                    rusqlite::params![id, time_milliseconds, left_click, right_click, x, y],
-                );
-            });
+//                 let _ = conn.execute(
+//                     "INSERT INTO mouse_tracker (id_list, time_milliseconds, left_click, right_click, x, y) VALUES (?, ?, ?, ?, ?, ?)",
+//                     rusqlite::params![id, time_milliseconds, left_click, right_click, x, y],
+//                 );
+//             });
 
-            if cfg!(debug_assertions) {
-                println!("id: {}", id );
-            }
-        }
-        Err(err) => {
-            if cfg!(debug_assertions) {
-                println!("Error setting mouse macro: {}", err);
-            }
-        }
-    }
+//             if cfg!(debug_assertions) {
+//                 println!("id: {}", id );
+//             }
+//         }
+//         Err(err) => {
+//             if cfg!(debug_assertions) {
+//                 println!("Error setting mouse macro: {}", err);
+//             }
+//         }
+//     }
 
-    conn.close().unwrap();
-}
+//     conn.close().unwrap();
+// }
