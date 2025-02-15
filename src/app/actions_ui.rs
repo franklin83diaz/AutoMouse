@@ -44,7 +44,7 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
         );
         mel.set_name(name);
         //set start time in global
-        metadata.set_start_time_unix(now.timestamp() as i32);
+        metadata.set_start_time_unix(now.timestamp_millis() as i32);
 
     });
 

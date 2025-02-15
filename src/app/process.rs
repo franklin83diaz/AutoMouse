@@ -1,4 +1,5 @@
 use rdev::{Event, EventType};
+use std::f32::consts::E;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::config::{self, data, data::map_key};
@@ -9,8 +10,7 @@ use chrono::Local;
 use config::data::{CONFIG_INSTANCE, CON_INSTANCE};
 
 pub fn event(event: Event) {
-    let start = SystemTime::now();
-    let millis = start.duration_since(UNIX_EPOCH).unwrap().as_millis();
+ 
     let config = CONFIG_INSTANCE.get().unwrap();
     let con = CON_INSTANCE.get().unwrap();
     let rmd = RECODIND_META_DATA.get().unwrap();
@@ -18,10 +18,11 @@ pub fn event(event: Event) {
     let mk = map_key(config.get_key_stop());
     let _key_stop = mk.1;
 
-    let mut xpoint: f64 = -1.0;
-    let mut ypoint: f64 = -1.0;
-    let mut left_click = false;
-    let mut right_click = false;
+    let mut action = 0;
+    let mut xpoint: i32 = 0;
+    let mut ypoint: i32  = 0;
+    let mut button: u8 = 0;
+ 
 
     match event.event_type {
         EventType::KeyPress(rdev::Key::ControlLeft) => {
@@ -37,17 +38,13 @@ pub fn event(event: Event) {
                 }
 
                 let now: chrono::DateTime<Local> = Local::now();
-                let seconds_runing = now.timestamp() as i32 - rmd.get_start_time_unix();
-                mel.set_seconds_runing(seconds_runing);
-
-                println!("now: {},", now.timestamp() as i32);
-                println!("start time: {} ", rmd.get_start_time_unix());
-
+                let miliseconds_runing = now.timestamp_millis() as i32 - rmd.get_start_time_unix();
+                mel.set_miliseconds_runing(miliseconds_runing);
 
                 config.set_recoding(false);
 
                 if cfg!(debug_assertions) {
-                    println!("Seconds running: {}", seconds_runing);
+                    println!("Seconds running: {}", miliseconds_runing);
                 }
 
                 // TODO: Review this
@@ -58,15 +55,29 @@ pub fn event(event: Event) {
         }
         EventType::MouseMove { x, y } => {
             if config.get_recoding() {
-                println!("Mouse moved to: x = {},y = {} , time = {}", x, y, millis);
-                xpoint = x;
-                ypoint = y;
+                xpoint = x as i32;
+                ypoint = y as i32;
+                action = 0;
             }
         }
-        EventType::ButtonPress(button) => {
-            left_click = button == rdev::Button::Left;
-            right_click = button == rdev::Button::Right;
-            println!("Mouse button pressed: {:?}", button);
+        EventType::ButtonPress(b) => {
+            button = match b {
+                rdev::Button::Left => 1,
+                rdev::Button::Right => 2,
+                rdev::Button::Middle => 3,
+                _ => 0,
+            };
+            action = 1;
+        }
+
+        EventType::ButtonRelease(b) => {
+            button = match b {
+                rdev::Button::Left => 1,
+                rdev::Button::Right => 2,
+                rdev::Button::Middle => 3,
+                _ => 0,
+            };
+            action = 2;
         }
 
         EventType::ButtonRelease(button) => {
@@ -77,6 +88,9 @@ pub fn event(event: Event) {
   
 
     if config.get_recoding() {
+        let now: chrono::DateTime<Local> = Local::now();
+        let miliseconds_runing = now.timestamp_millis() as i32 - rmd.get_start_time_unix();
+        println!("Event: {} Button: {}, Time: {}, X: {}, Y: {}", action, button, miliseconds_runing, xpoint, ypoint);
         // let mouse_tracker =
         //     data::MouseTracker::new(millis, left_click, right_click, xpoint, ypoint);
         // mtl.add(mouse_tracker);
