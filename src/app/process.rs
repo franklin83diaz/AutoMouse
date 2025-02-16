@@ -7,12 +7,11 @@ use crate::crud::sql;
 use crate::state::global::RECODIND_META_DATA;
 use crate::model::mouse::{MOUSE_EVENT_LIST, mouse_event_list};
 use chrono::Local;
-use config::data::{CONFIG_INSTANCE, CON_INSTANCE};
+use config::data::{CONFIG_INSTANCE};
 
 pub fn event(event: Event) {
  
     let config = CONFIG_INSTANCE.get().unwrap();
-    let con = CON_INSTANCE.get().unwrap();
     let rmd = RECODIND_META_DATA.get().unwrap();
     let mel = MOUSE_EVENT_LIST.get().unwrap();
     let mk = map_key(config.get_key_stop());
@@ -26,13 +25,13 @@ pub fn event(event: Event) {
 
     match event.event_type {
         EventType::KeyPress(rdev::Key::ControlLeft) => {
-            con.set_ctr_press(true);
+            rmd.set_ctr_press(true);
         }
         EventType::KeyRelease(rdev::Key::ControlLeft) => {
-            con.set_ctr_press(false);
+            rmd.set_ctr_press(false);
         }
         EventType::KeyPress(key) if key == _key_stop => {
-            if con.get_ctr_press() {
+            if rmd.get_ctr_press() {
                 if cfg!(debug_assertions) {
                     println!("Key {} pressed", mk.0);
                 }
@@ -47,8 +46,6 @@ pub fn event(event: Event) {
                     println!("Seconds running: {}", miliseconds_runing);
                 }
 
-                // TODO: Review this
-                con.tx.send(1).unwrap(); //This
                // sql::save_mouse_macro();
             }
             return;

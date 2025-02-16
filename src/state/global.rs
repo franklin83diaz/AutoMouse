@@ -3,7 +3,8 @@ use std::sync::Mutex;
 
 #[derive(Default)]
 pub struct RecodingMetaData {
-   pub start_time: Mutex<i32>,
+   start_time: Mutex<i32>,
+   ctr_press: Mutex<bool>,
 }
 
 impl RecodingMetaData {
@@ -16,7 +17,18 @@ impl RecodingMetaData {
         let data = self.start_time.lock().unwrap();
         *data
     }
+
+    pub fn set_ctr_press(&self, ctr_press: bool) {
+        let mut data = self.ctr_press.lock().unwrap();
+        *data = ctr_press;
+    }
+
+    pub fn get_ctr_press(&self) -> bool {
+        let data = self.ctr_press.lock().unwrap();
+        *data
+    }
     
 }
+
 
 pub static RECODIND_META_DATA: OnceLock<RecodingMetaData> = OnceLock::new();
