@@ -119,7 +119,6 @@ pub fn sync_config_from_db() {
 }
 
 
-// TODO: fix this
 //Mouse Macros
 pub fn save_mouse_macro() {
     let conn = connect().unwrap();
