@@ -27,7 +27,7 @@ fn main() -> Result<(), slint::PlatformError> {
     // The copy of the config running in memory is used for fast validation actions in process events
     app::actions_ui::sync_ui(&main_window);
 
-    app::send::send(&EventType::MouseMove { x: 400.0, y: 400.0 });
+    app::actions::send(&EventType::MouseMove { x: 400.0, y: 400.0 });
 
     // Init mouse_event_list
     let _ = MOUSE_EVENT_LIST.get_or_init(mouse_event_list::default);

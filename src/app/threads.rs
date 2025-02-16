@@ -2,9 +2,9 @@
 use rdev::listen;
 use std::thread::{self, sleep};
 use std::time::Duration;
+use slint::{invoke_from_event_loop, ComponentHandle, SharedString};
 
 use crate::app::process;
-use slint::{invoke_from_event_loop, ComponentHandle, SharedString};
 use crate::config::data::{CONFIG_INSTANCE, Communication, CON_INSTANCE};
 
 

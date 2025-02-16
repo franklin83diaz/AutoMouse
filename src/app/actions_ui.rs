@@ -1,12 +1,13 @@
-use crate::config::data::{ Setting, CONFIG_INSTANCE, map_key};
-use crate::config::set::{auto_stop_clicks, repeat_each, key_stop};
-use crate::state::global::{RECODIND_META_DATA, RecodingMetaData};
-use crate::model;
-use crate::crud;
 use chrono::{Datelike, Local, Timelike};
 use device_query::{DeviceQuery, DeviceState};
 use slint::{ComponentHandle, LogicalPosition, SharedString};
-use model::mouse::{MOUSE_EVENT_LIST, mouse_event_list};
+use model::mouse::MOUSE_EVENT_LIST;
+
+use crate::config::data::{ Setting, CONFIG_INSTANCE, map_key};
+use crate::config::set::{auto_stop_clicks, repeat_each, key_stop};
+use crate::state::global::RECODIND_META_DATA;
+use crate::model;
+use crate::crud;
 
 pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
     let conf = CONFIG_INSTANCE.get_or_init(Setting::default);
