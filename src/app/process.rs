@@ -4,7 +4,7 @@ use config::data::{CONFIG_INSTANCE, CON_INSTANCE};
 
 use crate::config::{self,  data::map_key};
 use crate::state::global::RECODIND_META_DATA;
-use crate::model::mouse::{MOUSE_EVENT_LIST, mouse_event};
+use crate::model::mouse::{MOUSE_EVENT_LIST, MouseEvent};
 use crate::crud::sql;
 
 pub fn event(event: Event) {
@@ -92,7 +92,7 @@ pub fn event(event: Event) {
         let now: chrono::DateTime<Local> = Local::now();
         let miliseconds_runing = now.timestamp_millis() as i32 - rmd.get_start_time_unix();
         println!("Event: {} Button: {}, Time: {}, X: {}, Y: {}", action, button, miliseconds_runing, xpoint, ypoint);
-        let mouse_event = mouse_event::new(action, button, xpoint, ypoint, miliseconds_runing);
+        let mouse_event = MouseEvent::new(action, button, xpoint, ypoint, miliseconds_runing);
         mel.add_mouse_event(mouse_event);
      
     }

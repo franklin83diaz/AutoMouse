@@ -12,7 +12,7 @@ use std::sync::OnceLock;
 // 1: left
 // 2: right
 // 3: middle
-pub struct mouse_event {
+pub struct MouseEvent {
     action: u8,
     button: u8,
     x: i32,
@@ -20,9 +20,9 @@ pub struct mouse_event {
     time: i32,
 }
 
-impl mouse_event {
+impl MouseEvent {
     pub fn new(action: u8, button: u8, x: i32, y: i32, time: i32) -> Self {
-        mouse_event {
+        MouseEvent {
             action,
             button,
             x,
@@ -38,13 +38,13 @@ impl mouse_event {
 
 #[derive(Default)]
 // mouse_event_list
-pub struct mouse_event_list {
+pub struct MouseEventList {
     name: Mutex<String>,
     miliseconds_runing: Mutex<i32>,
-    pub mouse_events: Mutex<Vec<mouse_event>>,
+    pub mouse_events: Mutex<Vec<MouseEvent>>,
 }
 
-impl mouse_event_list {
+impl MouseEventList {
     pub fn set_name(&self, name: String) {
         let mut data = self.name.lock().unwrap();
         *data = name;
@@ -65,10 +65,10 @@ impl mouse_event_list {
         *data
     }
 
-    pub fn add_mouse_event(&self, mouse_event: mouse_event) {
+    pub fn add_mouse_event(&self, mouse_event: MouseEvent) {
         let mut data = self.mouse_events.lock().unwrap();
         data.push(mouse_event);
     }
 }
 
-pub static MOUSE_EVENT_LIST: OnceLock<mouse_event_list> = OnceLock::new();
+pub static MOUSE_EVENT_LIST: OnceLock<MouseEventList> = OnceLock::new();

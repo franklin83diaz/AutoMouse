@@ -7,7 +7,7 @@ mod crud;
 
 use slint::ComponentHandle;
 use rdev::EventType;
-use model::mouse::{MOUSE_EVENT_LIST, mouse_event_list};
+use model::mouse::{MOUSE_EVENT_LIST, MouseEventList};
 use state::global::{RECODIND_META_DATA, RecodingMetaData};
 
 fn main() -> Result<(), slint::PlatformError> {
@@ -30,7 +30,7 @@ fn main() -> Result<(), slint::PlatformError> {
     app::actions::send(&EventType::MouseMove { x: 400.0, y: 400.0 });
 
     // Init mouse_event_list
-    let _ = MOUSE_EVENT_LIST.get_or_init(mouse_event_list::default);
+    let _ = MOUSE_EVENT_LIST.get_or_init(MouseEventList::default);
     // init state
     let _ = RECODIND_META_DATA.get_or_init(RecodingMetaData::default);
 

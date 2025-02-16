@@ -1,6 +1,7 @@
-use crate::config::data::{ Setting, CONFIG_INSTANCE};
-use crate::model::mouse::{MOUSE_EVENT_LIST, mouse_event_list};
 use rusqlite::{Connection, Result};
+
+use crate::config::data::{ Setting, CONFIG_INSTANCE};
+use crate::model::mouse::MOUSE_EVENT_LIST;
 
 fn connect() -> Result<Connection> {
     // Cambia el tipo de retorno a Result<Connection>
