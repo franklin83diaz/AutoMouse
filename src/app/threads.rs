@@ -43,8 +43,7 @@ pub fn run_all_threads( main_window: &crate::slint_generatedMainWindow::MainWind
     let con = CON_INSTANCE.get_or_init(Communication::new);
     let handle_weak2 = main_window.as_weak();
     thread::spawn(move || loop {
-        let data = con.rx.recv().unwrap();
-        println!("Received: {}", data);
+        let _ = con.rx.recv().unwrap();
         let handle_copy2 = handle_weak2.clone();
         let _ = invoke_from_event_loop(move || handle_copy2.unwrap().set_recording(false));
     });

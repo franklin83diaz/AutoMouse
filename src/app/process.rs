@@ -1,17 +1,16 @@
 use rdev::{Event, EventType};
-use std::f32::consts::E;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use crate::config::{self, data, data::map_key};
-use crate::crud::sql;
+use crate::config::{self,  data::map_key};
 use crate::state::global::RECODIND_META_DATA;
 use crate::model::mouse::{MOUSE_EVENT_LIST, mouse_event_list};
 use chrono::Local;
-use config::data::{CONFIG_INSTANCE};
+use config::data::{CONFIG_INSTANCE, CON_INSTANCE};
 
 pub fn event(event: Event) {
  
     let config = CONFIG_INSTANCE.get().unwrap();
+    let con = CON_INSTANCE.get().unwrap();
     let rmd = RECODIND_META_DATA.get().unwrap();
     let mel = MOUSE_EVENT_LIST.get().unwrap();
     let mk = map_key(config.get_key_stop());
@@ -24,14 +23,17 @@ pub fn event(event: Event) {
  
 
     match event.event_type {
+
+        //Control Key
         EventType::KeyPress(rdev::Key::ControlLeft) => {
-            rmd.set_ctr_press(true);
+            con.set_ctr_press(true);
         }
         EventType::KeyRelease(rdev::Key::ControlLeft) => {
-            rmd.set_ctr_press(false);
+            con.set_ctr_press(false);
         }
+        // Stop recoding
         EventType::KeyPress(key) if key == _key_stop => {
-            if rmd.get_ctr_press() {
+            if con.get_ctr_press() {
                 if cfg!(debug_assertions) {
                     println!("Key {} pressed", mk.0);
                 }
@@ -46,10 +48,14 @@ pub fn event(event: Event) {
                     println!("Seconds running: {}", miliseconds_runing);
                 }
 
+                // Send sinal to thread for set_recording(false)
+                con.tx.send(1).unwrap(); 
                // sql::save_mouse_macro();
             }
             return;
         }
+
+        // Mouse events
         EventType::MouseMove { x, y } => {
             if config.get_recoding() {
                 xpoint = x as i32;
@@ -57,6 +63,7 @@ pub fn event(event: Event) {
                 action = 0;
             }
         }
+        
         EventType::ButtonPress(b) => {
             button = match b {
                 rdev::Button::Left => 1,
@@ -77,9 +84,6 @@ pub fn event(event: Event) {
             action = 2;
         }
 
-        EventType::ButtonRelease(button) => {
-            println!("Mouse button released: {:?}", button);
-        }
         _ => {}
     }
   
