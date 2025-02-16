@@ -26,14 +26,14 @@ pub fn event(event: Event) {
 
         //Control Key
         EventType::KeyPress(rdev::Key::ControlLeft) => {
-            con.set_ctr_press(true);
+            rmd.set_ctr_press(true);
         }
         EventType::KeyRelease(rdev::Key::ControlLeft) => {
-            con.set_ctr_press(false);
+            rmd.set_ctr_press(false);
         }
         // Stop recoding
         EventType::KeyPress(key) if key == _key_stop => {
-            if con.get_ctr_press() {
+            if rmd.get_ctr_press() {
                 if cfg!(debug_assertions) {
                     println!("Key {} pressed", mk.0);
                 }

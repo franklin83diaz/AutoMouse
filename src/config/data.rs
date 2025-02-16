@@ -6,7 +6,6 @@ use std::sync::OnceLock;
 
 // Communication between threads
 pub struct Communication {
-    ctr_press: Mutex<bool>,
     pub tx: Sender<i32>,
     pub rx: Receiver<i32>,
 }
@@ -15,23 +14,7 @@ pub struct Communication {
 impl Communication {
     pub fn new() -> Self {
         let (tx, rx) = channel::bounded::<i32>(1);
-        let ctr_press = Mutex::new(false);
-        Communication { ctr_press, tx, rx }
-    }
-}
-
-impl Communication {
-    pub fn set_ctr_press(&self, ctr_press: bool) {
-        if cfg!(debug_assertions) {
-            println!("set_ctr_press: {}", ctr_press);
-        }
-        let mut data = self.ctr_press.lock().unwrap();
-        *data = ctr_press;
-    }
-
-    pub fn get_ctr_press(&self) -> bool {
-        let data = self.ctr_press.lock().unwrap();
-        *data
+        Communication { tx, rx }
     }
 }
 

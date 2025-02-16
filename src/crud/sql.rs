@@ -79,7 +79,7 @@ pub fn update_config() {
 pub fn sync_config_from_db() {
     let conn = connect().unwrap();
 
-    let mut stmt_result = conn.prepare("SELECT * FROM config");
+    let stmt_result = conn.prepare("SELECT * FROM config");
 
     match stmt_result {
         Ok(mut stmt) => {
