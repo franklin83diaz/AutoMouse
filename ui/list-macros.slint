@@ -2,6 +2,8 @@ import { ListView } from "std-widgets.slint";
 
 
 export component ListMacros inherits Rectangle {
+    property <int> id: 0;
+    callback replay(int);
  
 
     width: 400px;
@@ -43,6 +45,7 @@ export component ListMacros inherits Rectangle {
                 touchRun := TouchArea { 
                     clicked => {
                         debug("clicked run!!");
+                        replay(1);
                     }
                 }
                 

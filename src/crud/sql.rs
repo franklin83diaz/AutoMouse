@@ -217,3 +217,24 @@ pub fn save_mouse_macro() {
 
     conn.close().unwrap();
 }
+
+pub fn get_mouse_macro_list(id: i32) -> Vec<(i32, i32, i32, i32, i32)> {
+    let conn = connect().unwrap();
+    let mut stmt = conn.prepare("SELECT action, button, x, y, time FROM mouse_event WHERE id_list = ?").unwrap();
+    let mouse_event_list_iter = stmt.query_map(rusqlite::params![id], |row| {
+        Ok((
+            row.get::<_, i32>(0)?, //action
+            row.get::<_, i32>(1)?, //button
+            row.get::<_, i32>(2)?, //x
+            row.get::<_, i32>(3)?, //y
+            row.get::<_, i32>(4)?, //time
+        ))
+    }).unwrap();
+
+
+    let mut mouse_event_list = vec![];
+    for mouse_event in mouse_event_list_iter {
+        mouse_event_list.push(mouse_event.unwrap());
+    }
+    return mouse_event_list;
+}

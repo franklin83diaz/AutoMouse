@@ -9,6 +9,7 @@ export component MainWindow inherits Window {
     property <bool> subWindowsOpened: false;
     property <bool> showSetting: false;
     property <bool> showListMacros: false;
+    property <int> id: 0;
     
     in-out property <bool> recording: false;
     in-out property <bool> repeat: false;
@@ -25,6 +26,7 @@ export component MainWindow inherits Window {
     callback set_repeat_each(string);
     callback set_key_stop(string);
     callback set_auto_stop_clicks(string);
+    callback replay(int);
 
     width: 400px;
     height: subWindowsOpened ? 210px : 50px;
@@ -150,7 +152,7 @@ export component MainWindow inherits Window {
 
             set_auto_stop_clicks (auto_stop_each) => {
                 set_auto_stop_clicks(auto_stop_each);} 
-            
+
             //variables
                 repeat <=> repeat;
                 repeat_each <=> repeat_each;
@@ -158,7 +160,11 @@ export component MainWindow inherits Window {
                 auto_stop <=> auto_stop;
                 auto_stop_clicks <=> auto_stop_clicks;
         }
-        if showListMacros:  ListMacros{}
+        if showListMacros:  ListMacros{
+            replay(id) => {
+                replay(id);
+            }
+        }
      
     }
 }
