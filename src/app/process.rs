@@ -3,7 +3,8 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::config::{self,  data::map_key};
 use crate::state::global::RECODIND_META_DATA;
-use crate::model::mouse::{MOUSE_EVENT_LIST, mouse_event_list};
+use crate::model::mouse::{MOUSE_EVENT_LIST, mouse_event};
+use crate::crud::sql;
 use chrono::Local;
 use config::data::{CONFIG_INSTANCE, CON_INSTANCE};
 
@@ -50,7 +51,7 @@ pub fn event(event: Event) {
 
                 // Send sinal to thread for set_recording(false)
                 con.tx.send(1).unwrap(); 
-               // sql::save_mouse_macro();
+                sql::save_mouse_macro();
             }
             return;
         }
@@ -92,9 +93,8 @@ pub fn event(event: Event) {
         let now: chrono::DateTime<Local> = Local::now();
         let miliseconds_runing = now.timestamp_millis() as i32 - rmd.get_start_time_unix();
         println!("Event: {} Button: {}, Time: {}, X: {}, Y: {}", action, button, miliseconds_runing, xpoint, ypoint);
-        // let mouse_tracker =
-        //     data::MouseTracker::new(millis, left_click, right_click, xpoint, ypoint);
-        // mtl.add(mouse_tracker);
+        let mouse_event = mouse_event::new(action, button, xpoint, ypoint, miliseconds_runing);
+        mel.add_mouse_event(mouse_event);
      
     }
 }

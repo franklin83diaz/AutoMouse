@@ -1,8 +1,7 @@
 use std::sync::Mutex;
 use std::sync::OnceLock;
 
-
-// -Action- 
+// -Action-
 // 0: move
 // 1: button press
 // 2: button release
@@ -13,7 +12,7 @@ use std::sync::OnceLock;
 // 1: left
 // 2: right
 // 3: middle
-struct mouse_event {
+pub struct mouse_event {
     action: u8,
     button: u8,
     x: i32,
@@ -21,12 +20,28 @@ struct mouse_event {
     time: i32,
 }
 
+impl mouse_event {
+    pub fn new(action: u8, button: u8, x: i32, y: i32, time: i32) -> Self {
+        mouse_event {
+            action,
+            button,
+            x,
+            y,
+            time,
+        }
+    }
+
+    pub fn get_tuple(&self) -> (u8, u8, i32, i32, i32) {
+        (self.action, self.button, self.x, self.y, self.time)
+    }
+}
+
 #[derive(Default)]
 // mouse_event_list
 pub struct mouse_event_list {
     name: Mutex<String>,
     miliseconds_runing: Mutex<i32>,
-    pub   mouse_events: Mutex<Vec<mouse_event>>,
+    pub mouse_events: Mutex<Vec<mouse_event>>,
 }
 
 impl mouse_event_list {
@@ -54,9 +69,6 @@ impl mouse_event_list {
         let mut data = self.mouse_events.lock().unwrap();
         data.push(mouse_event);
     }
-
- 
-    
 }
 
 pub static MOUSE_EVENT_LIST: OnceLock<mouse_event_list> = OnceLock::new();
