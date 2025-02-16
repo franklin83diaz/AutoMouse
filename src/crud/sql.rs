@@ -111,7 +111,7 @@ pub fn sync_config_from_db() {
             if cfg!(debug_assertions) {
                 println!("create table config and insert default values");
             }
-            crate::model::sql::set_config();
+            crate::crud::sql::set_config();
             return;
         }
     }

@@ -168,31 +168,6 @@ pub fn map_key(key: char) -> (char, rdev::Key) {
     }
 }
 
-#[derive(Debug)]
-pub struct MouseTracker {
-    time_milliseconds: u128,
-    left_click: bool,
-    right_click: bool,
-    x: f64,
-    y: f64,
-}
-
-impl MouseTracker {
-    pub fn new(time_milliseconds: u128, left_click: bool, right_click: bool, x: f64, y: f64) -> Self {
-        MouseTracker {
-            time_milliseconds,
-            left_click,
-            right_click,
-            x,
-            y,
-        }
-    }
-
-    pub fn get_tuple (&self) -> (u128, bool, bool, f64, f64) {
-        (self.time_milliseconds, self.left_click, self.right_click, self.x, self.y)
-    }
-}
-
 
 pub static CON_INSTANCE: OnceLock<Communication> = OnceLock::new();
 pub static CONFIG_INSTANCE: OnceLock<Setting> = OnceLock::new();

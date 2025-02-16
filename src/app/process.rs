@@ -3,7 +3,7 @@ use std::f32::consts::E;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::config::{self, data, data::map_key};
-use crate::model::sql;
+use crate::crud::sql;
 use crate::state::global::RECODIND_META_DATA;
 use crate::model::mouse::{MOUSE_EVENT_LIST, mouse_event_list};
 use chrono::Local;

@@ -3,6 +3,7 @@ mod app;
 mod config;
 mod model;
 mod state;
+mod crud;
 
 use slint::ComponentHandle;
 use rdev::EventType;
@@ -11,7 +12,7 @@ use state::global::{RECODIND_META_DATA, RecodingMetaData};
 
 fn main() -> Result<(), slint::PlatformError> {
     // Sync Config db
-    model::sql::sync_config_from_db();
+    crud::sql::sync_config_from_db();
 
     //Main Window
     let main_window = MainWindow::new()?;
