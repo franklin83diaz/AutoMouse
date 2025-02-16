@@ -129,7 +129,7 @@ pub fn save_mouse_macro() {
         "CREATE TABLE IF NOT EXISTS mouse_event_list (
         id INTEGER PRIMARY KEY,
         name TEXT,
-        miliseconds_runing INTEGER,
+        miliseconds_runing INTEGER
     )",
         [],
     );
@@ -137,12 +137,12 @@ pub fn save_mouse_macro() {
     match result {
         Ok(_) => {
             if cfg!(debug_assertions) {
-                println!("Table mouse_tracker_list created successfully");
+                println!("Table mouse_event_list created successfully");
             }
         }
         Err(err) => {
             if cfg!(debug_assertions) {
-                println!("Error creating table mouse_tracker_list: {}", err);
+                println!("Error creating table mouse_event_list: {}", err);
             }
         }
     }
@@ -155,7 +155,7 @@ pub fn save_mouse_macro() {
         button INTEGER,
         time INTEGER,
         x INTEGER,
-        y INTEGER,
+        y INTEGER
     )",
         [],
     );
@@ -179,7 +179,7 @@ pub fn save_mouse_macro() {
     let name= mouse_event_list.get_name();
 
     let result = conn.execute(
-        "INSERT INTO mouse_tracker_list (name, miliseconds_runing) VALUES (?, ?)",
+        "INSERT INTO mouse_event_list (name, miliseconds_runing) VALUES (?, ?)",
         rusqlite::params![name, miliseconds_runing],
     );
 
