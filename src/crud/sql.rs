@@ -1,7 +1,7 @@
 use rusqlite::{Connection, Result};
 
 use crate::config::data::{ Setting, CONFIG_INSTANCE};
-use crate::model::mouse::MOUSE_EVENT_LIST;
+use crate::model::mouse::{MOUSE_EVENT_LIST, MouseEvent};
 
 fn connect() -> Result<Connection> {
     // Cambia el tipo de retorno a Result<Connection>
@@ -218,17 +218,20 @@ pub fn save_mouse_macro() {
     conn.close().unwrap();
 }
 
-pub fn get_mouse_macro_list(id: i32) -> Vec<(i32, i32, i32, i32, i32)> {
+pub fn get_mouse_macro_list(id: i32) -> Vec<MouseEvent> {
     let conn = connect().unwrap();
-    let mut stmt = conn.prepare("SELECT action, button, x, y, time FROM mouse_event WHERE id_list = ?").unwrap();
+    let mut stmt = conn.prepare("SELECT action, button, time, x, y FROM mouse_event WHERE id_list = ?").unwrap();
+
     let mouse_event_list_iter = stmt.query_map(rusqlite::params![id], |row| {
-        Ok((
-            row.get::<_, i32>(0)?, //action
-            row.get::<_, i32>(1)?, //button
-            row.get::<_, i32>(2)?, //x
-            row.get::<_, i32>(3)?, //y
-            row.get::<_, i32>(4)?, //time
-        ))
+        println!("");
+        println!("action: {}", row.get::<_, i32>("action").unwrap());
+        println!("button: {}", row.get::<_, i32>("button").unwrap());
+        println!("time: {}", row.get::<_, i32>("time").unwrap());
+        println!("x: {}", row.get::<_, i32>("x").unwrap());
+        println!("y: {}", row.get::<_, i32>("y").unwrap());
+        print!("-------------------");
+    
+        Ok(MouseEvent::new(row.get("action").unwrap(), row.get("button").unwrap(), row.get("time").unwrap(), row.get("x").unwrap(), row.get("y").unwrap()))
     }).unwrap();
 
 

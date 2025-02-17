@@ -2,7 +2,8 @@ use rdev::{simulate, EventType, SimulateError};
 use std::{thread, time};
 
 pub fn send(event_type: &EventType, milisec: i32) {
-    let milisec_delay = time::Duration::from_millis(8);
+    println!("{}", milisec);
+    let milisec_delay = time::Duration::from_millis(milisec as u64);
     thread::sleep(milisec_delay);
     match simulate(event_type) {
         Ok(()) => (),

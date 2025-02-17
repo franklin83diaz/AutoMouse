@@ -5,6 +5,7 @@ mod model;
 mod state;
 mod crud;
 
+use app::actions;
 use slint::ComponentHandle;
 use rdev::EventType;
 use model::mouse::{MOUSE_EVENT_LIST, MouseEventList};
@@ -36,10 +37,12 @@ fn main() -> Result<(), slint::PlatformError> {
     let v1 =crud::sql::get_mouse_macro_list(1);
     let mut temp_time =0;
 
-    for v in v1 {
-        temp_time = v.3 - temp_time;
-        app::actions::send(&EventType::MouseMove { x: v.4 as f64, y: v.2 as f64 }, temp_time);
-        println!("{:?}", v);
+    for me in v1 {
+        let (  actions, button,time, xpoint, ypoint) = me.get_tuple();
+        
+       let  time_sleep = time - temp_time;
+       temp_time = time;
+        app::actions::send(&EventType::MouseMove { x: xpoint as f64, y: ypoint as f64 }, time_sleep);
     }
 
     main_window.run()

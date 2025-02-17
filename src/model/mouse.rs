@@ -1,6 +1,21 @@
 use std::sync::Mutex;
 use std::sync::OnceLock;
 
+#[derive(Clone)]
+pub enum MouseAction {
+    Move,
+    Press,
+    Release,
+    Scroll,
+}
+
+#[derive(Clone)]
+pub enum MouseButton {
+    Left,
+    Right,
+    Middle,
+}
+
 // -Action-
 // 0: move
 // 1: button press
@@ -21,18 +36,18 @@ pub struct MouseEvent {
 }
 
 impl MouseEvent {
-    pub fn new(action: u8, button: u8, x: i32, y: i32, time: i32) -> Self {
+    pub fn new(action: u8, button: u8, time: i32, x: i32, y: i32) -> Self {
         MouseEvent {
             action,
             button,
+            time,
             x,
             y,
-            time,
         }
     }
 
     pub fn get_tuple(&self) -> (u8, u8, i32, i32, i32) {
-        (self.action, self.button, self.x, self.y, self.time)
+        (self.action, self.button, self.time, self.x, self.y)
     }
 }
 
