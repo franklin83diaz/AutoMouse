@@ -28,3 +28,6 @@ examples/target/
 # Local dependency files
 Cargo.lock
 .cargo/
+
+#others
+automouse.db
