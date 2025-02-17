@@ -127,28 +127,22 @@ pub fn sync_ui(main_window: &crate::slint_generatedMainWindow::MainWindow) {
 pub fn sync_ui_list_macros_from_db(main_window: &crate::slint_generatedMainWindow::MainWindow) {
     let handle_weak = main_window.as_weak();
 
-    //
+    let mouse_macros = crud::sql::get_mouse_macros();
+
     let default_tile = slint_generatedMainWindow::TileData::default();
-    let initial_vec = vec![
-        default_tile.clone(),
-        default_tile.clone(),
-        default_tile.clone(),
-        default_tile.clone(),
-        default_tile.clone(),
-        default_tile.clone(),
-        default_tile.clone(),
-        default_tile,
-    ];
+    let mut initial_vec = vec![];
+
+    for m in mouse_macros {
+        let mut tile = default_tile.clone();
+        tile.name = SharedString::from(m.1);
+        tile.id = m.0;
+        tile.time = m.2;
+
+        initial_vec.push(tile);
+    }
+
 
     let vec_model = VecModel::from(initial_vec);
-
-    for i in 0..5 {
-        let mut tile = slint_generatedMainWindow::TileData::default();
-        tile.name = SharedString::from(format!("Test {}", i));
-        tile.id = i as i32;
-        tile.time = 1000;
-        vec_model.set_row_data(i, tile);
-    }
 
     println!("model count: {}", vec_model.row_count());
 
