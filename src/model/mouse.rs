@@ -2,6 +2,7 @@ use std::sync::Mutex;
 use std::sync::OnceLock;
 
 #[derive(Clone)]
+#[derive(PartialEq)]
 pub enum MouseAction {
     Unknown,
     Move,
@@ -11,6 +12,7 @@ pub enum MouseAction {
 }
 
 #[derive(Clone)]
+#[derive(PartialEq)]
 pub enum MouseButton {
     Unknown,
     Left,
@@ -18,17 +20,6 @@ pub enum MouseButton {
     Middle,
 }
 
-// -Action-
-// 0: move
-// 1: button press
-// 2: button release
-// 3: scroll
-//
-// -button-
-// 0: reserve
-// 1: left
-// 2: right
-// 3: middle
 pub struct MouseEvent {
     action: MouseAction,
     button: MouseButton,

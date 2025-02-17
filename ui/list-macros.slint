@@ -1,7 +1,7 @@
 struct TileData {
     id: int,
     name: string,
-    time: string,
+    time: int,
 }
 
 import { ListView } from "std-widgets.slint";
@@ -27,7 +27,7 @@ export component ListMacros inherits Rectangle {
 
         for data in tile_data: Rectangle {
             height: 30px;
-            background: touch.has-hover || touchRun.has-hover || touchDel.has-hover ? #bdd9f5 : #f3f3f3;
+            background: touch.has-hover || touchRun.has-hover || touchDel.has-hover ? #bdd9f5 : #fcfcfc;
             width: parent.width;
             touch := TouchArea { }
 
@@ -35,7 +35,7 @@ export component ListMacros inherits Rectangle {
                 padding: 30px;
                 x: 15px;
                 text: data.name;
-                color: #f3f3f3;
+                color: #444444;
             }
 
             Image {

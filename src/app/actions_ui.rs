@@ -145,6 +145,8 @@ pub fn sync_ui_list_macros_from_db(main_window: &crate::slint_generatedMainWindo
     for i in 0..5 {
         let mut tile = slint_generatedMainWindow::TileData::default();
         tile.name = SharedString::from(format!("Test {}", i));
+        tile.id = i as i32;
+        tile.time = 1000;
         vec_model.set_row_data(i, tile);
     }
 
