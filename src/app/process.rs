@@ -4,7 +4,7 @@ use config::data::{CONFIG_INSTANCE, CON_INSTANCE};
 
 use crate::config::{self,  data::map_key};
 use crate::state::global::RECODIND_META_DATA;
-use crate::model::mouse::{MOUSE_EVENT_LIST, MouseEvent};
+use crate::model::mouse::{MOUSE_EVENT_LIST, MouseEvent, MouseAction, MouseButton};
 use crate::crud::sql;
 
 pub fn event(event: Event) {
@@ -16,10 +16,10 @@ pub fn event(event: Event) {
     let mk = map_key(config.get_key_stop());
     let _key_stop = mk.1;
 
-    let mut action = 0;
+    let mut action: MouseAction = MouseAction::Unknown;
+    let mut button: MouseButton = MouseButton::Unknown;
     let mut xpoint: i32 = 0;
     let mut ypoint: i32  = 0;
-    let mut button: u8 = 0;
  
 
     match event.event_type {
@@ -60,28 +60,26 @@ pub fn event(event: Event) {
             if config.get_recoding() {
                 xpoint = x as i32;
                 ypoint = y as i32;
-                action = 0;
+                action = MouseAction::Move;
             }
         }
         
         EventType::ButtonPress(b) => {
             button = match b {
-                rdev::Button::Left => 1,
-                rdev::Button::Right => 2,
-                rdev::Button::Middle => 3,
-                _ => 0,
+                rdev::Button::Left => MouseButton::Left,
+                rdev::Button::Right => MouseButton::Right,
+                _ => MouseButton::Middle,
             };
-            action = 1;
+            action = MouseAction::Press;
         }
 
         EventType::ButtonRelease(b) => {
             button = match b {
-                rdev::Button::Left => 1,
-                rdev::Button::Right => 2,
-                rdev::Button::Middle => 3,
-                _ => 0,
+                rdev::Button::Left => MouseButton::Left,
+                rdev::Button::Right => MouseButton::Right,
+                _ => MouseButton::Middle,
             };
-            action = 2;
+            action = MouseAction::Release;
         }
 
         _ => {}
@@ -91,7 +89,6 @@ pub fn event(event: Event) {
     if config.get_recoding() {
         let now: chrono::DateTime<Local> = Local::now();
         let miliseconds_runing = now.timestamp_millis() as i32 - rmd.get_start_time_unix();
-        println!("Event: {} Button: {}, Time: {}, X: {}, Y: {}", action, button, miliseconds_runing, xpoint, ypoint);
         let mouse_event = MouseEvent::new(action, button, miliseconds_runing, xpoint,ypoint );
         mel.add_mouse_event(mouse_event);
      

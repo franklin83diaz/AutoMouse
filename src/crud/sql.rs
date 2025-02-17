@@ -1,7 +1,8 @@
 use rusqlite::{Connection, Result};
 
+use crate::app::actions;
 use crate::config::data::{ Setting, CONFIG_INSTANCE};
-use crate::model::mouse::{MOUSE_EVENT_LIST, MouseEvent};
+use crate::model::mouse::{MOUSE_EVENT_LIST, MouseEvent, MouseAction, MouseButton};
 
 fn connect() -> Result<Connection> {
     // Cambia el tipo de retorno a Result<Connection>
@@ -199,7 +200,7 @@ pub fn save_mouse_macro() {
 
                 let _ = conn.execute(
                     "INSERT INTO mouse_event (id_list, action, button, time, x, y) VALUES (?, ?, ?, ?, ?, ?)",
-                    rusqlite::params![id, action, button, time_milliseconds, x, y],
+                    rusqlite::params![id, action as i32, button as i32, time_milliseconds, x, y],
                 );
 
             });
@@ -223,15 +224,22 @@ pub fn get_mouse_macro_list(id: i32) -> Vec<MouseEvent> {
     let mut stmt = conn.prepare("SELECT action, button, time, x, y FROM mouse_event WHERE id_list = ?").unwrap();
 
     let mouse_event_list_iter = stmt.query_map(rusqlite::params![id], |row| {
-        println!("");
-        println!("action: {}", row.get::<_, i32>("action").unwrap());
-        println!("button: {}", row.get::<_, i32>("button").unwrap());
-        println!("time: {}", row.get::<_, i32>("time").unwrap());
-        println!("x: {}", row.get::<_, i32>("x").unwrap());
-        println!("y: {}", row.get::<_, i32>("y").unwrap());
-        print!("-------------------");
+        let  action: MouseAction = match row.get::<_, i32>(0).unwrap() {
+            1 => MouseAction::Move,
+            2 => MouseAction::Press,
+            3 => MouseAction::Release,
+            4 => MouseAction::Scroll,
+            _ => MouseAction::Unknown,
+        };
+
+        let botton: MouseButton = match row.get::<_, i32>(1).unwrap() {
+            1 => MouseButton::Left,
+            2 => MouseButton::Right,
+            3 => MouseButton::Middle,
+            _ => MouseButton::Unknown,
+        };
     
-        Ok(MouseEvent::new(row.get("action").unwrap(), row.get("button").unwrap(), row.get("time").unwrap(), row.get("x").unwrap(), row.get("y").unwrap()))
+        Ok(MouseEvent::new(action, botton, row.get("time").unwrap(), row.get("x").unwrap(), row.get("y").unwrap()))
     }).unwrap();
 
 
