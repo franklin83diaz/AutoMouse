@@ -23,10 +23,28 @@ pub fn replay(id : i32) {
     let mut temp_time =0;
 
     for me in v1 {
-        let (  actions, button,time, xpoint, ypoint) = me.get_tuple();
+    let (  actions, button,time, xpoint, ypoint) = me.get_tuple();
         
        let  time_sleep = time - temp_time;
        temp_time = time;
+    if actions.clone() as i32 == 1 {
         app::actions::send(&EventType::MouseMove { x: xpoint as f64, y: ypoint as f64 }, time_sleep);
     }
+
+    if actions.clone() as i32 == 2 {    
+        match button.clone() as i32 {
+            1 => app::actions::send(&EventType::ButtonPress(rdev::Button::Left), time_sleep),
+            2 => app::actions::send(&EventType::ButtonPress(rdev::Button::Right), time_sleep),
+            _ => app::actions::send(&EventType::ButtonPress(rdev::Button::Middle), time_sleep),
+        }   
+    }
+
+    if actions.clone() as i32 == 3 {    
+        match button.clone() as i32 {
+            1 => app::actions::send(&EventType::ButtonRelease(rdev::Button::Left), time_sleep),
+            2 => app::actions::send(&EventType::ButtonRelease(rdev::Button::Right), time_sleep),
+            _ => app::actions::send(&EventType::ButtonRelease(rdev::Button::Middle), time_sleep),
+        }   
+    }
+}
 }
