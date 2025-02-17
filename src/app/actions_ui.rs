@@ -8,6 +8,7 @@ use crate::config::set::{auto_stop_clicks, repeat_each, key_stop};
 use crate::state::global::RECODIND_META_DATA;
 use crate::model;
 use crate::crud;
+use crate::app;
 
 pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
     let conf = CONFIG_INSTANCE.get_or_init(Setting::default);
@@ -48,6 +49,11 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
         //set start time in global
         metadata.set_start_time_unix(now.timestamp_millis() as i32);
 
+    });
+
+    // On Replay
+    main_window.on_replay(move |id| {
+       app::actions::replay(id);
     });
 
     // List
