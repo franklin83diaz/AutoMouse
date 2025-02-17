@@ -13,9 +13,9 @@ fn send(event_type: &EventType, milisec: i32) {
             println!("We could not send {:?}", event_type);
         }
     }
-    //let delay = time::Duration::from_millis(20);
+    // let delay = time::Duration::from_millis(20);
     // Let ths OS catchup (at least MacOS)
-   // thread::sleep(delay);
+    // thread::sleep(delay);
 }
 
 pub fn replay(id : i32) {

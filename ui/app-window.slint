@@ -1,3 +1,9 @@
+struct TileData {
+    id: int,
+    name: string,
+    time: string,
+}
+
 import { VerticalBox, HorizontalBox, Button, GridBox, CheckBox } from "std-widgets.slint";
 import { Setting } from "./setting.slint";
 import { ListMacros } from "./list-macros.slint";
@@ -18,6 +24,7 @@ export component MainWindow inherits Window {
     in-out property <bool> auto_stop: false;
     in-out property <string> auto_stop_clicks:"1";
     in property <string> time: "00:00:00";
+    in-out property <[TileData]> tile_data: [];
     
     callback move_windows();
     callback record();
@@ -95,6 +102,9 @@ export component MainWindow inherits Window {
                         if showListMacros {
                             subWindowsOpened = false;
                             showListMacros = false;
+                            debug("tile_data");
+                            debug(tile_data.length);
+                            debug("---------");
                             
                         }else{
                             subWindowsOpened = true;
@@ -164,6 +174,7 @@ export component MainWindow inherits Window {
             replay(id) => {
                 replay(id);
             }
+            tile_data <=> tile_data;
         }
      
     }

@@ -249,3 +249,19 @@ pub fn get_mouse_macro_list(id: i32) -> Vec<MouseEvent> {
     }
     return mouse_event_list;
 }
+
+
+pub fn get_mouse_macros() -> Vec<(i32, String, i32)> {
+    let conn = connect().unwrap();
+    let mut stmt = conn.prepare("SELECT id, name, miliseconds_runing FROM mouse_event_list").unwrap();
+
+    let mouse_event_list_iter = stmt.query_map([], |row| {
+        Ok((row.get("id").unwrap(), row.get("name").unwrap(), row.get("miliseconds_runing").unwrap()))
+    }).unwrap();
+
+    let mut mouse_event_list = vec![];
+    for mouse_event in mouse_event_list_iter {
+        mouse_event_list.push(mouse_event.unwrap());
+    }
+    return mouse_event_list;
+}

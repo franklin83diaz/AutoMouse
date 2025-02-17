@@ -1,6 +1,8 @@
 use chrono::{Datelike, Local, Timelike};
 use device_query::{DeviceQuery, DeviceState};
-use slint::{ComponentHandle, LogicalPosition, SharedString};
+use slint::{ComponentHandle, LogicalPosition, Model, ModelRc, SharedString, VecModel};
+use std::rc::Rc;
+use crate::slint_generatedMainWindow;
 use model::mouse::MOUSE_EVENT_LIST;
 
 use crate::config::data::{ Setting, CONFIG_INSTANCE, map_key};
@@ -117,5 +119,40 @@ pub fn sync_ui(main_window: &crate::slint_generatedMainWindow::MainWindow) {
         main_window.set_auto_stop(conf.get_auto_stop());
         main_window
             .set_auto_stop_clicks(SharedString::from(conf.get_auto_stop_clicks().to_string()));
+    }
+}
+
+
+
+pub fn sync_ui_list_macros_from_db(main_window: &crate::slint_generatedMainWindow::MainWindow) {
+    let handle_weak = main_window.as_weak();
+
+    //
+    let default_tile = slint_generatedMainWindow::TileData::default();
+    let initial_vec = vec![
+        default_tile.clone(),
+        default_tile.clone(),
+        default_tile.clone(),
+        default_tile.clone(),
+        default_tile.clone(),
+        default_tile.clone(),
+        default_tile.clone(),
+        default_tile,
+    ];
+
+    let vec_model = VecModel::from(initial_vec);
+
+    for i in 0..5 {
+        let mut tile = slint_generatedMainWindow::TileData::default();
+        tile.name = SharedString::from(format!("Test {}", i));
+        vec_model.set_row_data(i, tile);
+    }
+
+    println!("model count: {}", vec_model.row_count());
+
+    let model_rc: ModelRc<slint_generatedMainWindow::TileData> = ModelRc::from(Rc::new(vec_model));
+
+    if let Some(main_window) = handle_weak.upgrade() {
+        main_window.set_tile_data(model_rc);
     }
 }

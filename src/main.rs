@@ -32,6 +32,8 @@ fn main() -> Result<(), slint::PlatformError> {
     // init state
     let _ = RECODIND_META_DATA.get_or_init(RecodingMetaData::default);
 
+    app::actions_ui::sync_ui_list_macros_from_db(&main_window);
+
 
     main_window.run()
 }
