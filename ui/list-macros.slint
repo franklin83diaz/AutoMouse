@@ -12,6 +12,7 @@ export component ListMacros inherits Rectangle {
     in-out property <[TileData]> tile_data;
 
     callback replay(int);
+    callback delete_macro(int);
 
 
     width: 400px;
@@ -40,7 +41,7 @@ export component ListMacros inherits Rectangle {
 
             Image {
                 y: 4px;
-                x: 340px;
+                x: 335px;
                 height: 24px;
                 width: 24px;
                 source: @image-url("icons/motion_play_24dp_1C1B1F_FILL0_wght400_GRAD0_opsz24.png");
@@ -54,16 +55,17 @@ export component ListMacros inherits Rectangle {
 
             Image {
                 y: 4px;
-                x: 370px;
+                x: 365px;
                 height: 24px;
                 width: 24px;
                 source: @image-url("icons/delete_24dp_1C1B1F_FILL0_wght400_GRAD0_opsz24.png");
                 touchDel := TouchArea {
                     clicked => {
-                        debug("clicked del!!");
+                        delete_macro(data.id);
                     }
                 }
             }
+          
         }
     }
 }

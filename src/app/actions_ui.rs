@@ -63,6 +63,14 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
     main_window.on_refresh_list(move ||{
         sync_ui_list_macros_from_db(&handle_weak.unwrap());
     });
+
+    // List Windows
+    // delete
+    let handle_weak = main_window.as_weak();
+    main_window.on_delete_macro(move |id| {
+        crud::sql::delete_mouse_macro(id);
+        sync_ui_list_macros_from_db(&handle_weak.unwrap());
+    });
     
 
     // Settings

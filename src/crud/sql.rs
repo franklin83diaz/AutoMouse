@@ -290,3 +290,11 @@ pub fn get_mouse_macros() -> Vec<(i32, String, i32)> {
     }
     return mouse_event_list;
 }
+
+pub fn delete_mouse_macro(id: i32) {
+    let conn = connect().unwrap();
+    conn.execute("DELETE FROM mouse_event WHERE id_list = ?", rusqlite::params![id]).unwrap();
+    conn.execute("DELETE FROM mouse_event_list WHERE id = ?", rusqlite::params![id]).unwrap();
+    conn.close().unwrap();
+}
+ 
