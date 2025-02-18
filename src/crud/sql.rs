@@ -130,7 +130,7 @@ pub fn save_mouse_macro() {
         "CREATE TABLE IF NOT EXISTS mouse_event_list (
         id INTEGER PRIMARY KEY,
         name TEXT,
-        miliseconds_runing INTEGER
+        milliseconds_runing INTEGER
     )",
         [],
     );
@@ -176,12 +176,12 @@ pub fn save_mouse_macro() {
 
     let mouse_event_list = MOUSE_EVENT_LIST.get().unwrap();
     let conn = connect().unwrap();
-    let miliseconds_runing= mouse_event_list.get_miliseconds_runing();
+    let milliseconds_runing= mouse_event_list.get_milliseconds_runing();
     let name= mouse_event_list.get_name();
 
     let result = conn.execute(
-        "INSERT INTO mouse_event_list (name, miliseconds_runing) VALUES (?, ?)",
-        rusqlite::params![name, miliseconds_runing],
+        "INSERT INTO mouse_event_list (name, milliseconds_runing) VALUES (?, ?)",
+        rusqlite::params![name, milliseconds_runing],
     );
 
     match result {
@@ -253,10 +253,35 @@ pub fn get_mouse_macro_list(id: i32) -> Vec<MouseEvent> {
 
 pub fn get_mouse_macros() -> Vec<(i32, String, i32)> {
     let conn = connect().unwrap();
-    let mut stmt = conn.prepare("SELECT id, name, miliseconds_runing FROM mouse_event_list").unwrap();
+
+    //Create if not exists
+    let result = conn.execute(
+        "CREATE TABLE IF NOT EXISTS mouse_event_list (
+        id INTEGER PRIMARY KEY,
+        name TEXT,
+        milliseconds_runing INTEGER
+    )",
+        [],
+    );
+
+    match result {
+        Ok(_) => {
+            if cfg!(debug_assertions) {
+                println!("Table mouse_event_list created successfully");
+            }
+        }
+        Err(err) => {
+            if cfg!(debug_assertions) {
+                println!("Error creating table mouse_event_list: {}", err);
+            }
+        }
+    }
+ 
+
+    let mut stmt = conn.prepare("SELECT id, name, milliseconds_runing FROM mouse_event_list").unwrap();
 
     let mouse_event_list_iter = stmt.query_map([], |row| {
-        Ok((row.get("id").unwrap(), row.get("name").unwrap(), row.get("miliseconds_runing").unwrap()))
+        Ok((row.get("id").unwrap(), row.get("name").unwrap(), row.get("milliseconds_runing").unwrap()))
     }).unwrap();
 
     let mut mouse_event_list = vec![];

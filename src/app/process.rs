@@ -39,13 +39,13 @@ pub fn event(event: Event) {
                 }
 
                 let now: chrono::DateTime<Local> = Local::now();
-                let miliseconds_runing = now.timestamp_millis() as i32 - rmd.get_start_time_unix();
-                mel.set_miliseconds_runing(miliseconds_runing);
+                let milliseconds_runing = now.timestamp_millis() as i32 - rmd.get_start_time_unix();
+                mel.set_milliseconds_runing(milliseconds_runing);
 
                 config.set_recoding(false);
 
                 if cfg!(debug_assertions) {
-                    println!("Seconds running: {}", miliseconds_runing);
+                    println!("Seconds running: {}", milliseconds_runing);
                 }
 
                 // Send sinal to thread for set_recording(false)
@@ -88,8 +88,8 @@ pub fn event(event: Event) {
 
     if config.get_recoding() {
         let now: chrono::DateTime<Local> = Local::now();
-        let miliseconds_runing = now.timestamp_millis() as i32 - rmd.get_start_time_unix();
-        let mouse_event = MouseEvent::new(action.clone(), button, miliseconds_runing, xpoint,ypoint );
+        let milliseconds_runing = now.timestamp_millis() as i32 - rmd.get_start_time_unix();
+        let mouse_event = MouseEvent::new(action.clone(), button, milliseconds_runing, xpoint,ypoint );
         if action as i32 != 0{
             mel.add_mouse_event(mouse_event);
         }
