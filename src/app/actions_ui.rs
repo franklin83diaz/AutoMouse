@@ -33,7 +33,7 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
 
     // Recording
     main_window.on_record(move || {
-        conf.set_recoding(true);
+        
         let mel = MOUSE_EVENT_LIST.get().unwrap();
         let metadata = RECODIND_META_DATA.get().unwrap();
 
@@ -50,6 +50,8 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
         mel.set_name(name);
         //set start time in global
         metadata.set_start_time_unix(now.timestamp_millis() as i32);
+        mel.mouse_events.lock().unwrap().clear();
+        conf.set_recoding(true);
 
     });
 

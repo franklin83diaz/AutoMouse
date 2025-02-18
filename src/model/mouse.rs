@@ -77,6 +77,8 @@ impl MouseEventList {
         let mut data = self.mouse_events.lock().unwrap();
         data.push(mouse_event);
     }
+
+
 }
 
 pub static MOUSE_EVENT_LIST: OnceLock<MouseEventList> = OnceLock::new();
