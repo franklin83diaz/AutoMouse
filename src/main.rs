@@ -7,7 +7,7 @@ mod crud;
 
 use slint::ComponentHandle;
 use model::mouse::{MOUSE_EVENT_LIST, MouseEventList};
-use state::global::{RECODIND_META_DATA, RecodingMetaData};
+use state::global::{RECODING_META_DATA, RecodingMetaData};
 
 fn main() -> Result<(), slint::PlatformError> {
     // Sync Config db
@@ -30,7 +30,7 @@ fn main() -> Result<(), slint::PlatformError> {
     // Init mouse_event_list
     let _ = MOUSE_EVENT_LIST.get_or_init(MouseEventList::default);
     // init state
-    let _ = RECODIND_META_DATA.get_or_init(RecodingMetaData::default);
+    let _ = RECODING_META_DATA.get_or_init(RecodingMetaData::default);
 
     app::actions_ui::sync_ui_list_macros_from_db(&main_window);
 

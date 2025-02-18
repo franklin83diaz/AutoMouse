@@ -31,4 +31,4 @@ impl RecodingMetaData {
 }
 
 
-pub static RECODIND_META_DATA: OnceLock<RecodingMetaData> = OnceLock::new();
+pub static RECODING_META_DATA: OnceLock<RecodingMetaData> = OnceLock::new();

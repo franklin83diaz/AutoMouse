@@ -3,7 +3,7 @@ use chrono::Local;
 use config::data::{CONFIG_INSTANCE, CON_INSTANCE};
 
 use crate::config::{self,  data::map_key};
-use crate::state::global::RECODIND_META_DATA;
+use crate::state::global::RECODING_META_DATA;
 use crate::model::mouse::{MOUSE_EVENT_LIST, MouseEvent, MouseAction, MouseButton};
 use crate::crud::sql;
 
@@ -11,7 +11,7 @@ pub fn event(event: Event) {
  
     let config = CONFIG_INSTANCE.get().unwrap();
     let con = CON_INSTANCE.get().unwrap();
-    let rmd = RECODIND_META_DATA.get().unwrap();
+    let rmd = RECODING_META_DATA.get().unwrap();
     let mel = MOUSE_EVENT_LIST.get().unwrap();
     let mk = map_key(config.get_key_stop());
     let _key_stop = mk.1;
