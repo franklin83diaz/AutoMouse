@@ -46,10 +46,6 @@ pub fn run_all_threads( main_window: &crate::slint_generatedMainWindow::MainWind
         let _ = con.rx.recv().unwrap();
         let handle_copy2 = handle_weak2.clone();
         let _ = invoke_from_event_loop(move || handle_copy2.unwrap().set_recording(false));
-        let handle_clone = handle_weak2.clone();
-        // TODO: 
-       // actions_ui::sync_ui_list_macros_from_db(&handle_clone.clone().unwrap());
-       // println!("Stop recoding");
     });
 
     

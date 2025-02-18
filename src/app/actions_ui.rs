@@ -59,7 +59,11 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
     });
 
     // List
-    // No need Action in App
+    let handle_weak = main_window.as_weak();
+    main_window.on_refresh_list(move ||{
+        sync_ui_list_macros_from_db(&handle_weak.unwrap());
+    });
+    
 
     // Settings
     // No need Action in App

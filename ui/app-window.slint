@@ -34,6 +34,7 @@ export component MainWindow inherits Window {
     callback set_key_stop(string);
     callback set_auto_stop_clicks(string);
     callback replay(int);
+    callback refresh_list();
 
     width: 400px;
     height: subWindowsOpened ? 210px : 50px;
@@ -102,13 +103,12 @@ export component MainWindow inherits Window {
                         if showListMacros {
                             subWindowsOpened = false;
                             showListMacros = false;
-                            debug("tile_data");
-                            debug(tile_data.length);
-                            debug("---------");
+                           
                             
                         }else{
                             subWindowsOpened = true;
                             showSetting = false;
+                            refresh_list();
                             showListMacros = true;
                         }
                         
