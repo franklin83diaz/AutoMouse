@@ -1,11 +1,9 @@
 use rusqlite::{Connection, Result};
 
-use crate::app::actions;
 use crate::config::data::{ Setting, CONFIG_INSTANCE};
 use crate::model::mouse::{MOUSE_EVENT_LIST, MouseEvent, MouseAction, MouseButton};
 
 fn connect() -> Result<Connection> {
-    // Cambia el tipo de retorno a Result<Connection>
     let conn = Connection::open("automouse.db")?;
     conn.execute_batch("SELECT 1;")?;
 
