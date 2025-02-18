@@ -221,7 +221,7 @@ pub fn save_mouse_macro() {
 
 pub fn get_mouse_macro_list(id: i32) -> Vec<MouseEvent> {
     let conn = connect().unwrap();
-    let mut stmt = conn.prepare("SELECT action, button, time, x, y FROM mouse_event WHERE id_list = ?").unwrap();
+    let mut stmt = conn.prepare("SELECT action, button, time, x, y FROM mouse_event WHERE id_list = ? ORDER BY time ASC").unwrap();
 
     let mouse_event_list_iter = stmt.query_map(rusqlite::params![id], |row| {
         let  action: MouseAction = match row.get::<_, i32>(0).unwrap() {

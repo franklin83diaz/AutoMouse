@@ -56,12 +56,15 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
     // On Replay
     main_window.on_replay(move |id| {
        app::actions::replay(id);
+       
     });
 
     // List
     let handle_weak = main_window.as_weak();
     main_window.on_refresh_list(move ||{
-        sync_ui_list_macros_from_db(&handle_weak.unwrap());
+        if let Some(main_window) = handle_weak.upgrade() {
+        sync_ui_list_macros_from_db(&main_window);
+        }
     });
 
     // List Windows
