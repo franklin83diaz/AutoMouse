@@ -36,10 +36,11 @@ export component MainWindow inherits Window {
     callback replay(int);
     callback refresh_list();
     callback delete_macro(int);
+    callback close_windows();
 
     width: 400px;
     height: subWindowsOpened ? 210px : 50px;
-    no-frame: false;
+    no-frame: true;
     background: transparent;
 
     VerticalLayout {
@@ -72,6 +73,11 @@ export component MainWindow inherits Window {
                 height: 24px;
                 width: 24px;
                 source: @image-url("icons/close_24dp_1C1B1F_FILL0_wght400_GRAD0_opsz24.png");
+                TouchArea {
+                    clicked => {
+                        close_windows();
+                    }
+                }
             }
 
             Image {

@@ -7,7 +7,7 @@ use model::mouse::MOUSE_EVENT_LIST;
 
 use crate::config::data::{ Setting, CONFIG_INSTANCE, map_key};
 use crate::config::set::{auto_stop_clicks, repeat_each, key_stop};
-use crate::state::global::RECODIND_META_DATA;
+use crate::state::global::RECODING_META_DATA;
 use crate::model;
 use crate::crud;
 use crate::app;
@@ -31,11 +31,15 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
         }
     });
 
+    main_window.on_close_windows( move || {
+        std::process::exit(0);
+    });
+
     // Recording
     main_window.on_record(move || {
         
         let mel = MOUSE_EVENT_LIST.get().unwrap();
-        let metadata = RECODIND_META_DATA.get().unwrap();
+        let metadata = RECODING_META_DATA.get().unwrap();
 
         let now = Local::now();
         let name = format!(
