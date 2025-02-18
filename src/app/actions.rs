@@ -25,18 +25,9 @@ pub fn replay(id: i32) {
 
     for me in v1 {
         let (actions, button, time, x_point, y_point) = me.get_tuple();
-
         let time_sleep = time - temp_time;
-
-        println!("-------------------");
-        println!();
-        println!("time {} ", time);
-        println!("  -  ");
-        println!("temp_time {} ", temp_time);
         temp_time = time;
-        println!("time_sleep {} ", time_sleep);
-        println!("-------------------");
-        println!();
+     
 
         if actions.clone() as i32 == 1 {
             app::actions::send(

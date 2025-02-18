@@ -48,7 +48,6 @@ export component ListMacros inherits Rectangle {
                 touchRun := TouchArea {
                     clicked => {
                         replay(data.id);
-                        debug("clicked run!!");
                     }
                 }
             }
@@ -62,7 +61,6 @@ export component ListMacros inherits Rectangle {
                 touchDel := TouchArea {
                     clicked => {
                         delete_macro(data.id);
-                        debug("clicked delete!!");
                     }
                 }
             }
