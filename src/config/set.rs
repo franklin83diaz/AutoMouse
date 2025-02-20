@@ -50,7 +50,7 @@ pub fn key_stop(v: SharedString, main_window:&crate::slint_generatedMainWindow::
 pub fn auto_stop_clicks(v: SharedString, main_window:&crate::slint_generatedMainWindow::MainWindow  ){
     let  conf = CONFIG_INSTANCE.get();
     
-    if v.is_empty() {
+    if v.is_empty() || v == "0" {
             conf.unwrap().set_auto_stop_clicks(1);
         return;
     }

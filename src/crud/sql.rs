@@ -32,6 +32,12 @@ pub fn set_config() {
     .unwrap();
 
     let conf = CONFIG_INSTANCE.get_or_init(Setting::default);
+    conf.get_auto_stop();
+    
+   if conf.get_auto_stop_clicks() == 0 {
+        conf.set_auto_stop_clicks(1);
+    }
+
     conn.execute(
         "INSERT INTO config (recoding, repeat, repeat_each, key_stop, auto_stop, auto_stop_clicks) VALUES (?, ?, ?, ?, ?, ?)",
         rusqlite::params![
@@ -100,6 +106,7 @@ pub fn sync_config_from_db() {
             for config in config_iter {
                 let (_, recoding, repeat, repeat_each, key_stop, auto_stop, auto_stop_clicks) =
                     config.unwrap();
+
                 conf.set_recoding(recoding);
                 conf.set_repeat(repeat);
                 conf.set_repeat_each(repeat_each);
