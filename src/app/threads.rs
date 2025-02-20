@@ -46,6 +46,8 @@ pub fn run_all_threads( main_window: &crate::slint_generatedMainWindow::MainWind
         let _ = con.rx.recv().unwrap();
         let handle_copy2 = handle_weak2.clone();
         let _ = invoke_from_event_loop(move || handle_copy2.unwrap().set_recording(false));
+        let handle_copy2 = handle_weak2.clone();
+        let _ = invoke_from_event_loop(move || handle_copy2.unwrap().set_time(SharedString::from("00:00:00")));
     });
 
     
