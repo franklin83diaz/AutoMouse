@@ -27,51 +27,52 @@ export component Setting inherits Rectangle {
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     VerticalLayout {
-        HorizontalLayout {
-            padding: 20px;
-            alignment: LayoutAlignment.start;
-            Text {
-                text: "Repeat:";
-                color: primary_color;
-                font-size: 16px;
+        // HorizontalLayout {
+        //     padding: 20px;
+        //     alignment: LayoutAlignment.start;
+        //     Text {
+        //         text: "Repeat:";
+        //         color: primary_color;
+        //         font-size: 16px;
                 
-            }
+        //     }
 
-            CheckBox {
-                width: 25px;
-                height: 20px;
-                padding: 0px;
-                checked <=> repeat;
-                toggled => {
-                    set_repeat(repeat);
-                }
-            }
+        //     CheckBox {
+        //         width: 25px;
+        //         height: 20px;
+        //         padding: 0px;
+        //         checked <=> repeat;
+        //         toggled => {
+        //             set_repeat(repeat);
+        //         }
+        //     }
 
-            Rectangle {
-                width: 15px;
-            }
+        //     Rectangle {
+        //         width: 15px;
+        //     }
 
-            Text {
-                text: "Each:";
-                color: primary_color;
-                font-size: 16px;
-            }
+        //     Text {
+        //         text: "Each:";
+        //         color: primary_color;
+        //         font-size: 16px;
+        //     }
 
-            LineEdit {
-                width: 50px;
-                height: 20px;
-                text <=> repeat_each;
-                placeholder-text: "1";
-                font-size: 16px;
-                input-type: number;
-                edited(text) => {
-                    set_repeat_each(text);
-                }
-            }
-        }
+        //     LineEdit {
+        //         width: 50px;
+        //         height: 20px;
+        //         text <=> repeat_each;
+        //         placeholder-text: "1";
+        //         font-size: 16px;
+        //         input-type: number;
+        //         edited(text) => {
+        //             set_repeat_each(text);
+        //         }
+        //     }
+        // }
 
         HorizontalLayout {
             alignment: LayoutAlignment.start;
+            padding-top: 20px; // Remove when enable repeat
             padding-left: 20px;
             padding-bottom: 20px;
             Text {
