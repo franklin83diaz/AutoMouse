@@ -174,7 +174,7 @@ pub fn save_mouse_macro() {
 
     let mouse_event_list = MOUSE_EVENT_LIST.get().unwrap();
     let conn = connect().unwrap();
-    let milliseconds_runing= mouse_event_list.get_milliseconds_runing();
+    let milliseconds_runing= mouse_event_list.get_milliseconds_running();
     let name= mouse_event_list.get_name();
 
     let result = conn.execute(

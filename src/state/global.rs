@@ -5,6 +5,7 @@ use std::sync::Mutex;
 pub struct RecodingMetaData {
    start_time: Mutex<i32>,
    ctr_press: Mutex<bool>,
+   clicks: Mutex<u8>, //Max 255 clicks
 }
 
 impl RecodingMetaData {
@@ -25,6 +26,16 @@ impl RecodingMetaData {
 
     pub fn get_ctr_press(&self) -> bool {
         let data = self.ctr_press.lock().unwrap();
+        *data
+    }
+
+    pub fn set_clicks(&self, clicks: u8) {
+        let mut data = self.clicks.lock().unwrap();
+        *data = clicks;
+    }
+
+    pub fn get_clicks(&self) -> u8 {
+        let data = self.clicks.lock().unwrap();
         *data
     }
     

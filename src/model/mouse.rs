@@ -48,7 +48,7 @@ impl MouseEvent {
 // mouse_event_list
 pub struct MouseEventList {
     name: Mutex<String>,
-    milliseconds_runing: Mutex<i32>,
+    milliseconds_running: Mutex<i32>,
     pub mouse_events: Mutex<Vec<MouseEvent>>,
 }
 
@@ -63,13 +63,13 @@ impl MouseEventList {
         data.clone()
     }
 
-    pub fn set_milliseconds_runing(&self, seconds_runing: i32) {
-        let mut data = self.milliseconds_runing.lock().unwrap();
-        *data = seconds_runing;
+    pub fn set_milliseconds_running(&self, seconds_running: i32) {
+        let mut data = self.milliseconds_running.lock().unwrap();
+        *data = seconds_running;
     }
 
-    pub fn get_milliseconds_runing(&self) -> i32 {
-        let data = self.milliseconds_runing.lock().unwrap();
+    pub fn get_milliseconds_running(&self) -> i32 {
+        let data = self.milliseconds_running.lock().unwrap();
         *data
     }
 
