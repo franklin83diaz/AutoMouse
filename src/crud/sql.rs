@@ -180,7 +180,7 @@ pub fn save_mouse_macro() {
     }
 
     let mouse_event_list = MOUSE_EVENT_LIST.get().unwrap();
-    let conn = connect().unwrap();
+    let mut conn = connect().unwrap();
     let milliseconds_runing= mouse_event_list.get_milliseconds_running();
     let name= mouse_event_list.get_name();
 
@@ -197,18 +197,28 @@ pub fn save_mouse_macro() {
             }
 
             let list = mouse_event_list.mouse_events.lock().unwrap();
+            let query = format!("INSERT INTO mouse_event (id_list, action, button, time, x, y) VALUES (?, ?, ?, ?, ?, ?)");
+            let mut _tx = conn.transaction();
+           
+
             list.iter().for_each(|mouse_event| {
                 let (action, button, time_milliseconds, x, y) = mouse_event.get_tuple();
 
                 // conver time_milliseconds to i64
                 let time_milliseconds = time_milliseconds as i64;
 
-                let _ = conn.execute(
-                    "INSERT INTO mouse_event (id_list, action, button, time, x, y) VALUES (?, ?, ?, ?, ?, ?)",
-                    rusqlite::params![id, action as i32, button as i32, time_milliseconds, x, y],
-                );
+                // let _ = conn.execute(
+                //     "INSERT INTO mouse_event (id_list, action, button, time, x, y) VALUES (?, ?, ?, ?, ?, ?)",
+                //     rusqlite::params![id, action as i32, button as i32, time_milliseconds, x, y],
+                // );
 
+               let _= _tx.as_mut().unwrap().execute(&query, rusqlite::params![id, action as i32, button as i32, time_milliseconds, x, y]);
+                
             });
+
+            _tx.unwrap().commit().unwrap();
+        
+            
 
             if cfg!(debug_assertions) {
                 println!("id: {}", id );
