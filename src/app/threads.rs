@@ -23,6 +23,7 @@ pub fn run_all_threads( main_window: &crate::slint_generatedMainWindow::MainWind
     thread::spawn(move || loop {
         let mut t = 0;
         loop {
+            sleep(Duration::from_millis(1000));
             let config = CONFIG_INSTANCE.get().unwrap();
             if !config.get_recoding() {
                 break;
@@ -34,7 +35,7 @@ pub fn run_all_threads( main_window: &crate::slint_generatedMainWindow::MainWind
             let _ = invoke_from_event_loop(move || {
                 handle_copy.unwrap().set_time(SharedString::from(t_string))
             });
-            sleep(Duration::from_millis(1000));
+            
             t += 1;
         }
     });
