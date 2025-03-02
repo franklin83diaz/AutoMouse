@@ -16,7 +16,9 @@ pub fn run_all_threads( main_window: &crate::slint_generatedMainWindow::MainWind
         if let Err(error) = listen(|e|{
             process::event(e);
         }) {
+            if cfg!(debug_assertions) {
             eprintln!("Error: {:?}", error);
+            }
         }
     });
 

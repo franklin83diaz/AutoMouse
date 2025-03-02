@@ -10,7 +10,9 @@ fn send(event_type: &EventType, milliseconds: i32) {
     match simulate(event_type) {
         Ok(()) => (),
         Err(SimulateError) => {
+            if cfg!(debug_assertions) {
             println!("We could not send {:?}", event_type);
+            }
         }
     }
 
