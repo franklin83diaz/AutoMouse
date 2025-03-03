@@ -1,14 +1,13 @@
 use chrono::{Datelike, Local, Timelike};
 use device_query::{DeviceQuery, DeviceState};
-use slint::{ComponentHandle, LogicalPosition, Model, ModelRc, SharedString, VecModel};
+use slint::{ComponentHandle, LogicalPosition, ModelRc, SharedString, VecModel};
 use std::rc::Rc;
-use crate::slint_generatedMainWindow;
-use model::mouse::MOUSE_EVENT_LIST;
 
+use crate::slint_generatedMainWindow;
+use crate::model::mouse::MOUSE_EVENT_LIST;
 use crate::config::data::{ Setting, CONFIG_INSTANCE, map_key};
 use crate::config::set::{auto_stop_clicks, repeat_each, key_stop};
 use crate::state::global::RECODING_META_DATA;
-use crate::model;
 use crate::crud;
 use crate::app;
 
