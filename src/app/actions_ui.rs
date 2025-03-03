@@ -166,8 +166,6 @@ pub fn sync_ui_list_macros_from_db(main_window: &crate::slint_generatedMainWindo
 
     let vec_model = VecModel::from(initial_vec);
 
-    println!("model count: {}", vec_model.row_count());
-
     let model_rc: ModelRc<slint_generatedMainWindow::TileData> = ModelRc::from(Rc::new(vec_model));
 
     if let Some(main_window) = handle_weak.upgrade() {

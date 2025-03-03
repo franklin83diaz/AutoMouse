@@ -1,3 +1,4 @@
+#![windows_subsystem = "windows"]
 slint::include_modules!();
 mod app;
 mod config;
@@ -8,6 +9,9 @@ mod crud;
 use slint::ComponentHandle;
 use model::mouse::{MOUSE_EVENT_LIST, MouseEventList};
 use state::global::{RECODING_META_DATA, RecodingMetaData};
+
+
+
 
 fn main() -> Result<(), slint::PlatformError> {
     // Sync Config db

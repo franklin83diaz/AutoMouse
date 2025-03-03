@@ -4,23 +4,17 @@ import { VerticalBox, HorizontalBox, Button, GridBox, CheckBox, TextEdit, SpinBo
 export component Setting inherits Rectangle {
     property <color> primary_color: #1C1B1F;
     property <bool> PressKey: false;
-    
     property <image> check: @image-url("icons/check_box_outline_blank_18dp_1C1B1F_FILL0_wght400_GRAD0_opsz20.png");
-
     in-out property <string> key_stop;
     in-out property <bool> repeat;
     in-out property <bool> auto_stop;
     in-out property <string> repeat_each;
     in-out property <string> auto_stop_clicks;
-    
     callback set_repeat(bool);
     callback set_repeat_each(string);
     callback set_key_stop(string);
     callback set_auto_stop(bool);
     callback set_auto_stop_clicks(string);
- 
-
-
     width: 400px;
     height: 160px;
     background: #f3f3f3;
@@ -96,9 +90,9 @@ export component Setting inherits Rectangle {
                     }
                     focus-changed-event => {
                         PressKey = self.has-focus;
-
                     }
                 }
+
                 Rectangle {
                     y: 0px;
                     x: 0px;
@@ -110,7 +104,6 @@ export component Setting inherits Rectangle {
                         height: 29px;
                         width: 45px;
                         source: @image-url("icons/keymod.png");
-
                         Text {
                             text: "Ctrl";
                             color: #888888;
@@ -129,7 +122,6 @@ export component Setting inherits Rectangle {
                         height: 28px;
                         width: 28px;
                         source: @image-url("icons/key.png");
-                      
                     }
 
                     Text {
