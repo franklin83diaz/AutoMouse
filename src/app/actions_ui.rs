@@ -3,13 +3,13 @@ use device_query::{DeviceQuery, DeviceState};
 use slint::{ComponentHandle, LogicalPosition, ModelRc, SharedString, VecModel};
 use std::rc::Rc;
 
-use crate::slint_generatedMainWindow;
-use crate::model::mouse::MOUSE_EVENT_LIST;
-use crate::config::data::{ Setting, CONFIG_INSTANCE, map_key};
-use crate::config::set::{auto_stop_clicks, repeat_each, key_stop};
-use crate::state::global::RECODING_META_DATA;
-use crate::crud;
 use crate::app;
+use crate::config::data::{map_key, Setting, CONFIG_INSTANCE};
+use crate::config::set::{auto_stop_clicks, key_stop, repeat_each};
+use crate::crud;
+use crate::model::mouse::MOUSE_EVENT_LIST;
+use crate::slint_generatedMainWindow;
+use crate::state::global::RECODING_META_DATA;
 
 pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
     let conf = CONFIG_INSTANCE.get_or_init(Setting::default);
@@ -30,13 +30,19 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
         }
     });
 
-    main_window.on_close_windows( move || {
+    let handle_weak = main_window.as_weak();
+    main_window.on_minimize_requested(move || {
+        if let Some(main_window) = handle_weak.upgrade() {
+            main_window.window().set_minimized(true);
+        }
+    });
+
+    main_window.on_close_windows(move || {
         std::process::exit(0);
     });
 
     // Recording
     main_window.on_record(move || {
-        
         let mel = MOUSE_EVENT_LIST.get().unwrap();
         let metadata = RECODING_META_DATA.get().unwrap();
 
@@ -56,20 +62,18 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
         metadata.set_clicks(conf.get_auto_stop_clicks() as u8);
         mel.mouse_events.lock().unwrap().clear();
         conf.set_recoding(true);
-
     });
 
     // On Replay
     main_window.on_replay(move |id| {
-       app::actions::replay(id);
-       
+        app::actions::replay(id);
     });
 
     // List
     let handle_weak = main_window.as_weak();
-    main_window.on_refresh_list(move ||{
+    main_window.on_refresh_list(move || {
         if let Some(main_window) = handle_weak.upgrade() {
-        sync_ui_list_macros_from_db(&main_window);
+            sync_ui_list_macros_from_db(&main_window);
         }
     });
 
@@ -80,7 +84,6 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
         crud::sql::delete_mouse_macro(id);
         sync_ui_list_macros_from_db(&handle_weak.unwrap());
     });
-    
 
     // Settings
     // No need Action in App
@@ -136,14 +139,14 @@ pub fn sync_ui(main_window: &crate::slint_generatedMainWindow::MainWindow) {
 
         main_window.set_repeat_each(SharedString::from(conf.get_repeat_each().to_string()));
         main_window.set_repeat(conf.get_repeat());
-        main_window.set_key_stop(SharedString::from(map_key(conf.get_key_stop()).0.to_string()));
+        main_window.set_key_stop(SharedString::from(
+            map_key(conf.get_key_stop()).0.to_string(),
+        ));
         main_window.set_auto_stop(conf.get_auto_stop());
         main_window
             .set_auto_stop_clicks(SharedString::from(conf.get_auto_stop_clicks().to_string()));
     }
 }
-
-
 
 pub fn sync_ui_list_macros_from_db(main_window: &crate::slint_generatedMainWindow::MainWindow) {
     let handle_weak = main_window.as_weak();
@@ -161,7 +164,6 @@ pub fn sync_ui_list_macros_from_db(main_window: &crate::slint_generatedMainWindo
 
         initial_vec.push(tile);
     }
-
 
     let vec_model = VecModel::from(initial_vec);
 

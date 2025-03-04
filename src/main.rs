@@ -1,17 +1,14 @@
-#![windows_subsystem = "windows"]
+//#![windows_subsystem = "windows"]
 slint::include_modules!();
 mod app;
 mod config;
+mod crud;
 mod model;
 mod state;
-mod crud;
 
+use model::mouse::{MouseEventList, MOUSE_EVENT_LIST};
 use slint::ComponentHandle;
-use model::mouse::{MOUSE_EVENT_LIST, MouseEventList};
-use state::global::{RECODING_META_DATA, RecodingMetaData};
-
-
-
+use state::global::{RecodingMetaData, RECODING_META_DATA};
 
 fn main() -> Result<(), slint::PlatformError> {
     // Sync Config db
@@ -30,14 +27,12 @@ fn main() -> Result<(), slint::PlatformError> {
     // The copy of the config running in memory is used for fast validation actions in process events
     app::actions_ui::sync_ui(&main_window);
 
-  
     // Init mouse_event_list
     let _ = MOUSE_EVENT_LIST.get_or_init(MouseEventList::default);
     // init state
     let _ = RECODING_META_DATA.get_or_init(RecodingMetaData::default);
 
     app::actions_ui::sync_ui_list_macros_from_db(&main_window);
-
 
     main_window.run()
 }

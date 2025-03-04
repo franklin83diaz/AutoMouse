@@ -10,13 +10,11 @@ import { ListMacros } from "./list-macros.slint";
  
 
 export component MainWindow inherits Window {
-
     property <color> primary_color:#1C1B1F;
     property <bool> subWindowsOpened: false;
     property <bool> showSetting: false;
     property <bool> showListMacros: false;
     property <int> id: 0;
-    
     in-out property <bool> recording: false;
     in-out property <bool> repeat: false;
     in-out property <string> key_stop: "Q";
@@ -25,7 +23,6 @@ export component MainWindow inherits Window {
     in-out property <string> auto_stop_clicks:"1";
     in property <string> time: "00:00:00";
     in-out property <[TileData]> tile_data: [];
-    
     callback move_windows();
     callback record();
     callback set_repeat(bool);
@@ -37,12 +34,11 @@ export component MainWindow inherits Window {
     callback refresh_list();
     callback delete_macro(int);
     callback close_windows();
-
+    callback minimize_requested();
     width: 400px;
     height: subWindowsOpened ? 210px : 50px;
     no-frame: true;
     background: transparent;
-
     VerticalLayout {
         alignment: LayoutAlignment.start;
         Rectangle {
@@ -53,7 +49,7 @@ export component MainWindow inherits Window {
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
             border-bottom-left-radius: subWindowsOpened ? 0px : 5px;
-            border-bottom-right-radius: subWindowsOpened ? 0px: 5px;
+            border-bottom-right-radius: subWindowsOpened ? 0px : 5px;
             Image {
                 y: 14px;
                 x: 10px;
@@ -89,6 +85,7 @@ export component MainWindow inherits Window {
                 TouchArea {
                     clicked => {
                         if (!recording) {
+                            minimize_requested();
                             subWindowsOpened = false;
                             showSetting = false;
                             showListMacros = false;
@@ -110,15 +107,12 @@ export component MainWindow inherits Window {
                         if showListMacros {
                             subWindowsOpened = false;
                             showListMacros = false;
-                           
-                            
-                        }else{
+                        } else {
                             subWindowsOpened = true;
                             showSetting = false;
                             refresh_list();
                             showListMacros = true;
                         }
-                        
                     }
                 }
             }
@@ -134,12 +128,11 @@ export component MainWindow inherits Window {
                         if showSetting {
                             showSetting = false;
                             subWindowsOpened = false;
-                        }else{
+                        } else {
                             subWindowsOpened = true;
                             showListMacros = false;
                             showSetting = true;
                         }
-                        
                     }
                 }
             }
@@ -152,32 +145,34 @@ export component MainWindow inherits Window {
                 color: primary_color;
             }
         }
+
         if showSetting: Setting {
 
             // functions callbacks
-            set_repeat (repeat) => {
-                set_repeat(repeat);}
-
-            set_repeat_each (repeat_each) => {
-                set_repeat_each(repeat_each);}
-
-            set_key_stop (keyStop) => {
-                set_key_stop(keyStop);}
-
-            set_auto_stop (auto_stop) => {
-                set_auto_stop(auto_stop);}
-
-            set_auto_stop_clicks (auto_stop_each) => {
-                set_auto_stop_clicks(auto_stop_each);} 
+            set_repeat(repeat) => {
+                set_repeat(repeat);
+            }
+            set_repeat_each(repeat_each) => {
+                set_repeat_each(repeat_each);
+            }
+            set_key_stop(keyStop) => {
+                set_key_stop(keyStop);
+            }
+            set_auto_stop(auto_stop) => {
+                set_auto_stop(auto_stop);
+            }
+            set_auto_stop_clicks(auto_stop_each) => {
+                set_auto_stop_clicks(auto_stop_each);
+            } 
 
             //variables
                 repeat <=> repeat;
-                repeat_each <=> repeat_each;
-                key_stop <=> key_stop;
-                auto_stop <=> auto_stop;
-                auto_stop_clicks <=> auto_stop_clicks;
+            repeat_each <=> repeat_each;
+            key_stop <=> key_stop;
+            auto_stop <=> auto_stop;
+            auto_stop_clicks <=> auto_stop_clicks;
         }
-        if showListMacros:  ListMacros{
+        if showListMacros:  ListMacros {
             replay(id) => {
                 replay(id);
             }
@@ -186,6 +181,5 @@ export component MainWindow inherits Window {
             }
             tile_data <=> tile_data;
         }
-     
     }
 }
