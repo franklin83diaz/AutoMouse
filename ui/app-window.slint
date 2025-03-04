@@ -25,6 +25,7 @@ export component MainWindow inherits Window {
     in-out property <[TileData]> tile_data: [];
     callback move_windows();
     callback record();
+    callback stop_record();
     callback set_repeat(bool);
     callback set_auto_stop(bool);
     callback set_repeat_each(string);
@@ -91,6 +92,8 @@ export component MainWindow inherits Window {
                             showListMacros = false;
                             record();
                             recording = true;
+                        } else {
+                            stop_record();
                         }
                     }
                 }

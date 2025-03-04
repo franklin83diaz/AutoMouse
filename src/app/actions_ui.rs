@@ -4,7 +4,7 @@ use slint::{ComponentHandle, LogicalPosition, ModelRc, SharedString, VecModel};
 use std::rc::Rc;
 
 use crate::app;
-use crate::config::data::{map_key, Setting, CONFIG_INSTANCE};
+use crate::config::data::{map_key, Setting, CONFIG_INSTANCE, CON_INSTANCE};
 use crate::config::set::{auto_stop_clicks, key_stop, repeat_each};
 use crate::crud;
 use crate::model::mouse::MOUSE_EVENT_LIST;
@@ -30,6 +30,7 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
         }
     });
 
+    // Minimize Windows
     let handle_weak = main_window.as_weak();
     main_window.on_minimize_requested(move || {
         if let Some(main_window) = handle_weak.upgrade() {
@@ -62,6 +63,20 @@ pub fn action_bar(main_window: &crate::slint_generatedMainWindow::MainWindow) {
         metadata.set_clicks(conf.get_auto_stop_clicks() as u8);
         mel.mouse_events.lock().unwrap().clear();
         conf.set_recoding(true);
+    });
+
+    // Stop Recording
+    main_window.on_stop_record(|| {
+        let config = CONFIG_INSTANCE.get().unwrap();
+        let mel = MOUSE_EVENT_LIST.get().unwrap();
+        let now: chrono::DateTime<Local> = Local::now();
+        let rmd = RECODING_META_DATA.get().unwrap();
+        let con = CON_INSTANCE.get().unwrap();
+        let milliseconds_running = now.timestamp_millis() as i32 - rmd.get_start_time_unix();
+        mel.set_milliseconds_running(milliseconds_running);
+        config.set_recoding(false);
+        crud::sql::save_mouse_macro();
+        con.tx.send(1).unwrap();
     });
 
     // On Replay
